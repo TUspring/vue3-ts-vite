@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <p class="text">美女图片预览</p>
     <banner :bannerData="state.bannerData"></banner>
     <van-loading color="#1989fa" v-if="state.loading" />
   </div>
@@ -10,6 +9,7 @@
   import { useRouter } from "vue-router";
   import { useStore } from "vuex";
   import { getBannerList } from "../../api/index";
+  import axios from 'axios';
 
   const router = useRouter();
   const store = useStore();
@@ -35,22 +35,31 @@
 
   // DOM 加载完成后更新数据
   onMounted(() => {
+    axios({
+      method: 'get',
+      url: '/api/user/approval/list',
+      responseType: 'stream'
+    })
+      .then(function (response) {
+        console.log(response)
+      });
+
+
     state.loading = true;
-    getBannerList()
-      .then(
-        (res: any) => {
-          state.loading = false;
-          state.bannerData = res.data;
-          ctx.$toast({
-            type: "success",
-            message: "请求成功"
-          });
-          console.log(res);
-        },
-        error => {
-          initFN();
-        }
-      )
+    getBannerList().then(
+      (res: any) => {
+        state.loading = false;
+        state.bannerData = res.data;
+        ctx.$toast({
+          type: "success",
+          message: "请求成功"
+        });
+        console.log(res);
+      },
+      error => {
+        initFN();
+      }
+    )
       .catch(error => {
         initFN();
       });

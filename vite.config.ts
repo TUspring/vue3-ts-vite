@@ -12,14 +12,12 @@ export default defineConfig({
   },
   server: {
     port: 4000, // 服务端口
-    open: true, // 是否自动打开浏览器
-    host: 'localhost', // 主机名字
     proxy: { // 代理
       '/api': {
-        target: '/api',
+        target: "http://dingtalk.whitehorse.cn/",
         changeOrigin: true,
         ws: false,
-        rewrite: path => path.replace(/^\/api/, '')
+        // rewrite: path => path.replace(/^\/api/, '')
       }
     },
     cors: true
