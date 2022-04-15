@@ -1,0 +1,28 @@
+.df-bt{display: flex; justify-content: space-between; align-items: center;}
+.df-left{display: flex; justify-content: flex-start; align-items: center;}
+.df-m{display: flex;justify-content: center;align-items: center;}
+.df-right{display: flex;justify-content: flex-end;align-items: center;}
+
+// 细线
+.thin-line{
+  position: relative;
+}
+.thin-line::before {
+  content: "";
+  width: 200%;
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e5e5e5;
+  transform: scale(0.5);
+  transform-origin: 0 0;
+}
+.spin-icon-load{
+  animation: ani-spin 1s linear infinite;
+}
+@keyframes ani-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}

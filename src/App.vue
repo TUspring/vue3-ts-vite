@@ -14,7 +14,7 @@ export default defineComponent({
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -22,10 +22,7 @@ export default defineComponent({
   /* width: 100%; */
   height: 100%;
 }
-html,
-body {
+html,body{
   height: 100%;
-  /* width: 100%; */
-  overflow-x: hidden;
 }
 </style>

@@ -1,6 +1,5 @@
-import { stringifyQuery } from "vue-router"
 
-const baseSize: number = 37.5
+const baseSize: number = 100
 
 function setRem() {
   const scale: number = document.documentElement.clientWidth / 375

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <banner :bannerData="state.bannerData"></banner>
-    <van-loading color="#1989fa" v-if="state.loading" />
+    <!-- <banner :bannerData="state.bannerData"></banner>
+    <van-loading color="#1989fa" v-if="state.loading" /> -->
   </div>
 </template>
 <script lang="ts" setup="props">
