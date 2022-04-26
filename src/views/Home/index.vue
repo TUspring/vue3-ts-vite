@@ -8,7 +8,7 @@
   import { reactive, onMounted, getCurrentInstance } from "vue";
   import { useRouter } from "vue-router";
   import { useStore } from "vuex";
-  import { getBannerList } from "../../api/index";
+  // import { getBannerList } from "../../api/index";
   import axios from 'axios';
 
   const router = useRouter();
@@ -46,23 +46,22 @@
 
 
     state.loading = true;
-    getBannerList().then(
-      (res: any) => {
-        state.loading = false;
-        state.bannerData = res.data;
-        ctx.$toast({
-          type: "success",
-          message: "请求成功"
-        });
-        console.log(res);
-      },
-      error => {
-        initFN();
-      }
-    )
-      .catch(error => {
-        initFN();
-      });
+    // getBannerList().then(
+    //   (res: any) => {
+    //     state.loading = false;
+    //     state.bannerData = res.data;
+    //     ctx.$toast({
+    //       type: "success",
+    //       message: "请求成功"
+    //     });
+    //     console.log(res);
+    //   },
+    //   error => {
+    //     initFN();
+    //   }
+    // ).catch(error => {
+    //     initFN();
+    //   });
   });
 </script>
 <style lang="scss" scoped>

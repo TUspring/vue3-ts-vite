@@ -18,6 +18,13 @@ export default defineConfig({
         changeOrigin: true,
         ws: false,
         // rewrite: path => path.replace(/^\/api/, '')
+      },
+      '/crm': {
+        // target: "http://dingtalk.whitehorse.cn/",
+        target: "http://crm.test.whitehorse.cn/",
+        changeOrigin: true,
+        ws: false,
+        rewrite: path => path.replace(/^\/crm/, '')
       }
     },
     cors: true

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
+import baseConfig from "./config";
 import { Toast } from 'vant';
 
 // 定义接口
@@ -14,10 +15,7 @@ interface PendingType {
 const pending: Array<PendingType> = [];
 const CancelToken = axios.CancelToken;
 // axios 实例
-const instance = axios.create({
-  timeout: 10000,
-  responseType: 'json'
-});
+const instance = axios.create(baseConfig);
 
 // 移除重复请求
 const removePending = (config: AxiosRequestConfig) => {
@@ -29,7 +27,7 @@ const removePending = (config: AxiosRequestConfig) => {
       // 执行取消操作
       list.cancel('操作太频繁，请稍后再试');
       // 从数组中移除记录
-      if(pending.length > 1){
+      if (pending.length > 1) {
         pending.splice(item, 1)
       }
     }
@@ -38,14 +36,14 @@ const removePending = (config: AxiosRequestConfig) => {
 
 // 添加请求拦截器
 instance.interceptors.request.use(
-  request => { 
+  request => {
     Toast({
       message: '加载中',
       forbidClick: true,
     });
     removePending(request);
     request.cancelToken = new CancelToken((c) => {
-      pending.push({ url: request.url, method: request.method, params: request.params, data:request.data, cancel: c, });
+      pending.push({ url: request.url, method: request.method, params: request.params, data: request.data, cancel: c, });
     });
     return request;
   },

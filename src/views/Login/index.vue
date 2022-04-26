@@ -31,10 +31,12 @@
   import { reactive, computed } from "vue";
   import { Toast } from 'vant'
   import { useRouter } from "vue-router";
-  import { loginCode } from "@/api/index";
+  import $http from "@/api/index.ts";
   export default {
     name: 'Login',
     setup() {
+      $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
+      })
       const router = useRouter();
       const phoneVal = /^1[0-9][0-9]{9}$/;
       let codeDelay = 0;
@@ -75,14 +77,19 @@
           });
           return;
         }
-        // toLogin({ userName: state.userName, passWord: state.passWord }).then(res => {
+
+        $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
+          console.log(res)
+        })
+        // loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then(res => {
         //   Toast({
         //     type: "success",
         //     message: "登录成功"
         //   });
+        //   console.log(res)
         //   // 设置 token
-        //   window.localStorage.setItem("accessToken", res.data.token);
-        //   router.push("/select");
+        //   // window.localStorage.setItem("accessToken", res.data.token);
+        //   // router.push("/select");
         // },
         //   error => {
         //     initError();
@@ -110,7 +117,7 @@
             type: "success",
             message: "登录成功"
           });
-          console.log(res)
+          // console.log(res)
         })
         // this.$http.sendCode({
         //   phone: this.loginForm.phone
@@ -154,10 +161,10 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding: 0 .4rem;
+      padding: 0 40px;
 
       .form-item {
-        height: .54rem;
+        height: 54px;
         display: flex;
         align-items: center;
         border-bottom: 1px solid #e0e0e0;
@@ -166,7 +173,7 @@
         input {
           width: 100%;
           height: 100%;
-          font-size: .16rem;
+          font-size: 16px;
         }
 
         input::placeholder {
@@ -186,7 +193,7 @@
         }
 
         .input-right-addons {
-          width: 1rem;
+          width: 100px;
           text-align: right;
           flex-shrink: 0;
 
@@ -214,17 +221,17 @@
       .form-button {
         width: 100%;
         color: #fff;
-        margin-top: .32rem;
+        margin-top: 32px;
         background: #49f;
         border-radius: 3px;
-        height: .48rem;
+        height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
       .form-addons {
-        margin-top: .2rem;
+        margin-top: 20px;
       }
     }
   }
