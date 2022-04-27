@@ -10,8 +10,8 @@ import { Toast } from 'vant';
 const token = window.localStorage.getItem("userInfo") ? JSON.parse(window.localStorage.getItem("userInfo") || "").token : "",
   reqURL = HOST,
   header: object = {
-    // 'Content-Type': 'application/json;charset=UTF-8',//Payload
-    'Content-Type': 'application/x-www-form-urlencoded',//Form Data
+    // 'Content-Type': 'application/json;charset=UTF-8', //Payload
+    'Content-Type': 'application/x-www-form-urlencoded', //Form Data
     'X-Requested-With': 'XMLHttpRequest',
     token: token
   };
@@ -52,52 +52,28 @@ class Abstract {
    * GET类型的网络请求
    */
   protected getRequest({ url, data, params, responseType, show }: AxiosRequest) {
-    return new Promise((resolve, reject) => {
-      this.apiAxios({ method: 'GET', url, data, params, responseType, show }).then(res => {
-        resolve(res)
-      }).catch((error) => {
-        reject(error)
-      });
-    });
+    return this.apiAxios({ method: 'GET', url, data, params, responseType, show })
   }
 
   /**
    * POST类型的网络请求
    */
   protected postRequest({ url, data, params, responseType, show }: AxiosRequest) {
-    return new Promise((resolve, reject) => {
-      this.apiAxios({ method: 'POST', url, data, params, responseType, show }).then(res => {
-        resolve(res)
-      }).catch((error) => {
-        reject(error)
-      });
-    });
+    return this.apiAxios({ method: 'POST', url, data, params, responseType, show })
   }
 
   /**
    * PUT类型的网络请求
    */
   protected putRequest({ url, data, params, responseType }: AxiosRequest) {
-    return new Promise((resolve, reject) => {
-      this.apiAxios({ method: 'PUT', url, data, params, responseType }).then(res => {
-        resolve(res)
-      }).catch((error) => {
-        reject(error)
-      });
-    });
+    return this.apiAxios({ method: 'PUT', url, data, params, responseType })
   }
 
   /**
    * DELETE类型的网络请求
    */
   protected deleteRequest({ url, data, params, responseType }: AxiosRequest) {
-    return new Promise((resolve, reject) => {
-      this.apiAxios({ method: 'DELETE', url, data, params, responseType }).then(res => {
-        resolve(res)
-      }).catch((error) => {
-        reject(error)
-      });
-    });
+    return this.apiAxios({ method: 'DELETE', url, data, params, responseType })
   }
 }
 export default Abstract;

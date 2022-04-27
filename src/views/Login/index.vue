@@ -28,15 +28,21 @@
   </div>
 </template>
 <script lang="ts">
-  import { reactive, computed } from "vue";
+  import { reactive, computed, getCurrentInstance } from "vue";
   import { Toast } from 'vant'
   import { useRouter } from "vue-router";
-  import $http from "@/api/index.ts";
   export default {
     name: 'Login',
     setup() {
-      $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
-      })
+      const { ctx, proxy } = getCurrentInstance()
+      console.log(proxy.$toast)
+      $toast({
+        type: "fail",
+        message: "登录失败"
+      });
+      // $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
+      //   console.log(res.data)
+      // })
       const router = useRouter();
       const phoneVal = /^1[0-9][0-9]{9}$/;
       let codeDelay = 0;
