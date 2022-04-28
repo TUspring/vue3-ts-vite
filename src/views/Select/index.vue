@@ -1,8 +1,8 @@
 <template>
   <div class="select-wrap">
     <van-radio-group v-model="state.checked" direction="horizontal" :icon-size="30" @change="change">
-      <van-radio name="1">男</van-radio>
-      <van-radio name="2">女</van-radio>
+      <van-radio name="1">1</van-radio>
+      <van-radio name="2">2</van-radio>
     </van-radio-group>
   </div>
 </template>
@@ -21,14 +21,12 @@
     const num = parseInt(e);
     switch (num) {
       case 1:
-        console.log("男");
         ctx.$toast({
           type: "text",
-          message: "暂无帅哥"
+          message: "暂无"
         });
         break;
       case 2:
-        console.log("女");
         setTimeout(() => {
           router.push("/");
         }, 1000);

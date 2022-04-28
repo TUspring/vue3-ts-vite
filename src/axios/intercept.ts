@@ -37,9 +37,11 @@ const removePending = (config: AxiosRequestConfig) => {
 // 添加请求拦截器
 instance.interceptors.request.use(
   request => {
-    Toast({
-      message: '加载中',
+    Toast.loading({
+      duration: 0,
+      message: '加载中...',
       forbidClick: true,
+      loadingType: 'spinner'
     });
     removePending(request);
     request.cancelToken = new CancelToken((c) => {

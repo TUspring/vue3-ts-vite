@@ -34,17 +34,10 @@
   export default {
     name: 'Login',
     setup() {
-      const { ctx, proxy } = getCurrentInstance()
-      console.log(proxy.$toast)
-      $toast({
-        type: "fail",
-        message: "登录失败"
-      });
-      // $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
-      //   console.log(res.data)
-      // })
+      const { ctx, proxy: { $http } } = getCurrentInstance()
       const router = useRouter();
       const phoneVal = /^1[0-9][0-9]{9}$/;
+
       let codeDelay = 0;
       let state = reactive({
         phone: "",
@@ -68,41 +61,29 @@
         window.localStorage.clear();
         router.push("/login");
       };
-      const login = async () => {
-        if (!state.userName) {
-          Toast({
-            type: "text",
-            message: "请输入用户名"
-          });
-          return;
-        }
-        if (!state.passWord) {
-          Toast({
-            type: "text",
-            message: "请输入密码"
-          });
-          return;
-        }
 
-        $http.loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then((res) => {
-          console.log(res)
+      const login = async () => {
+        if (state.phone.length == '') {
+          return Toast('请输入手机号码！');
+        }
+        if (!phoneVal.test(state.phone)) {
+          return Toast('请输入正确的手机号码！');
+        }
+        if (!state.code && state.code.length < 6) {
+          return Toast('请输入6位手机验证码！');
+        }
+        let ajaxParams = {
+          phone: state.phone,
+          code: state.code
+        }
+        $http.userLogin(ajaxParams).then((res) => {
+          if (res.status === 'ok') {
+            Toast('登录成功')
+            successLogin(res.data)
+          } else {
+            Toast(res.message)
+          }
         })
-        // loginCode({ userid: '李皓仪', city: '北京', year: '2022', start: '1', end: '12', type: '候车亭' }).then(res => {
-        //   Toast({
-        //     type: "success",
-        //     message: "登录成功"
-        //   });
-        //   console.log(res)
-        //   // 设置 token
-        //   // window.localStorage.setItem("accessToken", res.data.token);
-        //   // router.push("/select");
-        // },
-        //   error => {
-        //     initError();
-        //   }
-        // ).catch(error => {
-        //   initError();
-        // });
       };
       const validCode = async () => {
         if (codeDelay > 0) {
@@ -118,25 +99,36 @@
       };
       //请求验证码
       const httpGetCode = async () => {
-        toLogin({ userName: state.userName, passWord: state.passWord }).then(res => {
-          Toast({
-            type: "success",
-            message: "登录成功"
-          });
-          // console.log(res)
+        $http.sendCode({ phone: state.phone }).then(res => {
+          if (res.status === 'ok') {
+            Toast({
+              type: "success",
+              message: "发送成功"
+            });
+            this.countDown(); //发起倒计时
+          } else {
+            Toast({
+              type: "fail",
+              message: res.message
+            });
+          }
         })
-        // this.$http.sendCode({
-        //   phone: this.loginForm.phone
-        // }).then((res) => {
-        //   let { data, status, message } = res;
-        //   if (status === 'ok') {
-        //     this.countDown(); //发起倒计时
-        //   } else {
-        //     Toast(message)
-        //   }
-        // }).catch((error) => {
-        //   Toast(error.message)
-        // })
+      }
+      // 登录成功后的操作
+      const successLogin = (data) => {
+        let time = (new Date).getTime();
+        // session 登录状态
+        sessionStorage.setItem('IS_USER_LOGINED', 'Y');
+        // 存储 accsss token 信息
+        localStorage.setItem('OA_USER_INFO', JSON.stringify(data));
+        localStorage.setItem('ACCESS_TOKEN', data.token);
+        localStorage.setItem('USERNAME', data.user_name);
+
+        setTimeout(() => {
+          router.push({
+            path: '/'
+          })
+        }, 500)
       }
 
       return {

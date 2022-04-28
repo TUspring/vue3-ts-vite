@@ -47,9 +47,7 @@
 
   .my-swipe .van-swipe-item {
     width: 100%;
-    //   color: #fff;
     font-size: 1rem;
-    //   line-height: 6rem;
     text-align: center;
     background-color: #fff;
   }
