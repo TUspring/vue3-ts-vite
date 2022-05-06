@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import baseConfig from "./config";
+import router from '../router/index'
 import { Toast } from 'vant';
 
 // 定义接口
@@ -59,10 +60,13 @@ instance.interceptors.response.use(
   response => {
     Toast.clear();
     removePending(response.config);
-    const errorCode = response?.data?.errorCode;
+    const errorCode = response?.data?.error_code;
+    // 根据errorCode，对业务做异常处理(和后端约定)
     switch (errorCode) {
       case '401':
-        // 根据errorCode，对业务做异常处理(和后端约定)
+        router.replace({
+          path: '/login'
+        })
         break;
       default:
         break;

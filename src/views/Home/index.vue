@@ -55,7 +55,7 @@
 
       <div class="list-content" v-if="!group.isOpen">
         <div v-for="(list,i) in group.list" :key="i" style="display: inline-block;width: 25%;">
-          <div class="list-item" @click="navigateTo(list)">
+          <div class="list-item" @click="navigateToModule(list)">
             <div>
               <img :src="list.icon" alt="" class="icon-img">
             </div>
@@ -96,11 +96,16 @@
   onMounted(() => {
     getModuleList()
   });
+  const navigateToModule = (item) => {
+    router.push({
+      path: '/module',
+      query: {
+        id: item.id
+      }
+    })
+  }
   //调整到审批流程详情
   const navigateToFlow = (key, type) => {
-    // console.log(key)
-    // console.log(type)
-    // return
     router.push({
       path: '/flowList',
       query: {

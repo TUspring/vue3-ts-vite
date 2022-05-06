@@ -53,15 +53,8 @@
           return true
         }
       })
-      const initError = () => {
-        Toast({
-          type: "fail",
-          message: "登录失败"
-        });
-        window.localStorage.clear();
-        router.push("/login");
-      };
-
+ 
+      //提交 登录请求
       const login = async () => {
         if (state.phone.length == '') {
           return Toast('请输入手机号码！');
@@ -85,6 +78,7 @@
           }
         })
       };
+
       const validCode = async () => {
         if (codeDelay > 0) {
           return false;

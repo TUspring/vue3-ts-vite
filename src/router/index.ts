@@ -1,35 +1,15 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
+const Home = () => import("../views/Home/index.vue")
+const Login = () => import("../views/Login/index.vue")
+const Detail = () => import("../views/Detail/index.vue")
+const Module = () => import("../views/Module/index.vue")
+
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'Home',
-    meta: {
-      title: "首页",
-      keepAlive: true,
-      requireAuth: true
-    },
-    component: () => import("../views/Home/index.vue")
-  },
-  {
-    path: '/detail/:id/:item',
-    name: 'Detail',
-    meta: {
-      title: "选项",
-      keepAlive: true,
-      requireAuth: true
-    },
-    component: () => import("../views/Detail/index.vue")
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    meta: {
-      title: "登录",
-      keepAlive: true
-    },
-    component: () => import("../views/Login/index.vue")
-  }
+  { path: '/', name: 'Home', component: Home },
+  { path: '/module', name: 'module', component: Module },
+  { path: '/detail/:id/:item', name: 'Detail', component: Detail },
+  { path: '/login', name: 'Login', component: Login }
 ]
 
 const router = createRouter({

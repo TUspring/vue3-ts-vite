@@ -33,7 +33,7 @@ class Abstract {
         if (res.status === 200) {  // 200:服务端业务处理正常结束
           if (res.data.status === 'ok') {
             resolve(res.data);
-          } else {
+          } else { 
             Toast.fail({ message: res.data?.message });
             resolve(res.data);
           }
