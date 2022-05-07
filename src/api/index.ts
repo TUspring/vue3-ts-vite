@@ -7,8 +7,13 @@ class Basic extends Abstract {
   userLogin(data: any) {
     return this.postRequest({ url: '/api/user/phone_login', data })
   }
+  //模板列表
   approvalModuleList(data: any) {
     return this.postRequest({ url: '/api/user/approval/list', data })
+  } 
+  //模板详情
+  approvalModuleDetail(data: any) {
+    return this.postRequest({ url: '/api/user/approval/detail', data })
   } 
 }
 export default new Basic()
