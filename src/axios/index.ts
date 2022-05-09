@@ -2,13 +2,13 @@
  * axios基础构建
  * @date 2022-03-04
  */
-let HOST = ''
+
 import instance from './intercept';
 import { AxiosRequest, CustomResponse } from './types';
 import { Toast } from 'vant';
 
 const token = window.localStorage.getItem("userInfo") ? JSON.parse(window.localStorage.getItem("userInfo") || "").token : "",
-  reqURL = HOST,
+  reqURL = '',
   header: object = {
     // 'Content-Type': 'application/json;charset=UTF-8', //Payload
     'Content-Type': 'application/x-www-form-urlencoded', //Form Data

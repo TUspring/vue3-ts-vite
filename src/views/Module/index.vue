@@ -11,50 +11,38 @@
       </div>
       <div v-for="(item,index) in state.detailInfo.control_list" :key="index">
         <!-- 1、单行输入框 -->
-        <div class="component-view input-item-view df-bt" v-if="item.key ==='single_input'">
-          <div class="item-label">
-            <span class="required-icon" v-if="item.data.required">*</span>
-            <div>{{item.data.title}}</div>
-          </div>
-          <div class="item-input">
-            <input class="input-box" type="text" :placeholder="item.data.tips" v-model="item.data.value"
-              @blur="storageValueChange(item)" />
-          </div>
-        </div>
+        <component :is="CurrentCompoent['single_input']" v-if="item.key ==='single_input'" :item="item"
+          @changeCallback="storageValueChange"></component>
+
         <!-- 2、多行输入框 -->
-        <div class="component-view input-item-view" v-if="item.key ==='multiple_input'">
-          <div class="item-label">
-            <span class="required-icon" v-if="item.data.required">*</span>
-            {{item.data.title}}
-          </div>
-          <div class="item-input-many">
-            <textarea class="input-textarea-box" rows="4" :placeholder="item.data.tips" v-model="item.data.value"
-              @blur="storageValueChange(item)"></textarea>
-          </div>
-        </div>
+        <component :is="CurrentCompoent['multiple_input']" v-if="item.key ==='multiple_input'" :item="item"
+          @changeCallback="storageValueChange"></component>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, toRefs, ref, onMounted, onActivated, getCurrentInstance } from "vue";
+  import { reactive, toRefs, ref, onMounted, onActivated, getCurrentInstance, markRaw, defineAsyncComponent } from "vue";
   import { useRouter } from 'vue-router'
-  const { ctx, proxy: { $http } } = getCurrentInstance()
+  import { useExpose } from '@/composition/use-expose';
 
-  // import CityPicker from "@/components/module/button.tsx";
+  const CurrentCompoent = reactive({
+    'single_input': markRaw(defineAsyncComponent(() => import('@/components/module/single-input'))),
+    'multiple_input': markRaw(defineAsyncComponent(() => import('@/components/module/multiple-input'))),
+  })
+  const { ctx, proxy: { $http } } = getCurrentInstance()
+  let routeInfo = useRouter().currentRoute?.value?.query
+  let tableFormTotalList = reactive([])
   let state = reactive({
     detailInfo: {}
   });
 
   onMounted(async () => {
-    let routeInfo = useRouter().currentRoute.value.query
-    console.log(routeInfo)
-
-    getModuleDetail(routeInfo)
+    getModuleDetail()
   })
 
-  const getModuleDetail = (routeInfo) => {
+  const getModuleDetail = () => {
     $http.approvalModuleDetail({
       id: routeInfo.id,
       modify_audit_id: routeInfo.modify_audit_id,
@@ -73,10 +61,42 @@
           }
           return j
         })
-        // detailInfo = obj;
         state.detailInfo = obj;
-        console.log(state.detailInfo.name)
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
+  //缓存改变的值
+  const storageValueChange = (info) => {
+    let statisticsStatus = false; //表单是否有合计项
+    if (tableFormTotalList.length > 0) {
+      statisticsStatus = tableFormTotalList[0].list.some(j => j.data.statistics);
+    }
+    $http.saveEditModule({
+      model_id: routeInfo.id,
+      model_control_id: info.id,
+      value: info.data.value,
+      index: tableFormTotalList.length > 0 ? tableFormTotalList[this.currentTableRowIndex].index : '', //表单里面的输入项改变
+    }).then(res => {
+      if (res.status === "ok") {
+        let obj = res.data;
+        // if (statisticsStatus) {
+        //   this.$set(this.detailInfo, 'process_list', obj.process_list)
+        //   this.detailInfo.control_list.map(j => {
+        //     if (j.id === this.currentModuleId) {
+        //       obj.control_list.map(r => {
+        //         if (r.id === this.currentModuleId) {
+        //           this.$set(j.data, "statistics", r.data.statistics);
+        //         }
+        //       })
+        //     }
+        //   });
+        // }
+        // if (info.is_condition) {
+        //   this.$set(this.detailInfo, 'process_list', obj.process_list)
+        // }
       }
     }).catch(error => {
       console.log(error);
@@ -89,7 +109,7 @@
   @import "styles/popup-table-edit.scss";
   @import "styles/index.scss";
 
-  ::v-deep {
+  /* ::v-deep {
 
     .ProvCityHeaderConfirm,
     .ProvCityHeaderCancle {
@@ -119,5 +139,5 @@
     .ProvCityBox {
       z-index: 2599 !important;
     }
-  }
+  } */
 </style>
