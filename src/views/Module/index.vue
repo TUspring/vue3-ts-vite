@@ -17,6 +17,14 @@
         <!-- 2、多行输入框 -->
         <component :is="CurrentCompoent['multiple_input']" v-if="item.key ==='multiple_input'" :item="item"
           @changeCallback="storageValueChange"></component>
+
+        <!-- 3、数字输入框 -->
+        <component :is="CurrentCompoent['number_input']" v-if="item.key ==='number_input'" :item="item"
+          @changeCallback="storageValueChange"></component>
+
+        <!-- 4、单选框 -->
+        <component :is="CurrentCompoent['radio_choice']" v-if="item.key ==='radio_choice'" :item="item"
+          @changeCallback="storageValueChange"></component>
       </div>
     </div>
   </div>
@@ -25,17 +33,20 @@
 <script lang="ts" setup>
   import { reactive, toRefs, ref, onMounted, onActivated, getCurrentInstance, markRaw, defineAsyncComponent } from "vue";
   import { useRouter } from 'vue-router'
-  import { useExpose } from '@/composition/use-expose';
 
   const CurrentCompoent = reactive({
     'single_input': markRaw(defineAsyncComponent(() => import('@/components/module/single-input'))),
     'multiple_input': markRaw(defineAsyncComponent(() => import('@/components/module/multiple-input'))),
+    'number_input': markRaw(defineAsyncComponent(() => import('@/components/module/number-input'))),
+    'radio_choice': markRaw(defineAsyncComponent(() => import('@/components/module/radio-choice'))),
   })
   const { ctx, proxy: { $http } } = getCurrentInstance()
   let routeInfo = useRouter().currentRoute?.value?.query
   let tableFormTotalList = reactive([])
   let state = reactive({
-    detailInfo: {}
+    detailInfo: {},
+    currentModuleId: null, //组件id
+    currentTableRowIndex: 0, //索引
   });
 
   onMounted(async () => {
@@ -78,25 +89,25 @@
       model_id: routeInfo.id,
       model_control_id: info.id,
       value: info.data.value,
-      index: tableFormTotalList.length > 0 ? tableFormTotalList[this.currentTableRowIndex].index : '', //表单里面的输入项改变
+      index: tableFormTotalList.length > 0 ? tableFormTotalList[state.currentTableRowIndex].index : '', //表单里面的输入项改变
     }).then(res => {
       if (res.status === "ok") {
         let obj = res.data;
-        // if (statisticsStatus) {
-        //   this.$set(this.detailInfo, 'process_list', obj.process_list)
-        //   this.detailInfo.control_list.map(j => {
-        //     if (j.id === this.currentModuleId) {
-        //       obj.control_list.map(r => {
-        //         if (r.id === this.currentModuleId) {
-        //           this.$set(j.data, "statistics", r.data.statistics);
-        //         }
-        //       })
-        //     }
-        //   });
-        // }
-        // if (info.is_condition) {
-        //   this.$set(this.detailInfo, 'process_list', obj.process_list)
-        // }
+        if (statisticsStatus) {
+          detailInfo.process_list = obj.process_list;
+          detailInfo.control_list.map(j => {
+            if (j.id === state.currentModuleId) {
+              obj.control_list.map(r => {
+                if (r.id === state.currentModuleId) {
+                  j.data.statistics = r.data.statistics
+                }
+              })
+            }
+          });
+        }
+        if (info.is_condition) { //只有is_condition为true才重新赋值
+          detailInfo.process_list = obj.process_list;
+        }
       }
     }).catch(error => {
       console.log(error);

@@ -9,8 +9,7 @@ import "./styles/iconfont.css"; //字体图标
 import http from "./api/index";
 import vant from 'vant'
 import "./utils/rem"; //移动端单位转换，px=>rem
-import Banner from "./components/Banner/index.vue"
 const app = createApp(App)
-app.config.globalProperties.$http = http
+app.config.globalProperties.$http = http;//全局方法、属性
 
-app.component('banner', Banner).use(router).use(store).use(vant).mount('#app')
+app.use(router).use(store).use(vant).mount('#app')

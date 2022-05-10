@@ -1,11 +1,11 @@
 
 /**
- * 2、多行输入框
+ * 3、数字输入框 
  * 
- * 组件key: multiple_input
+ * 组件key: number_input
  * */
 import "@/styles/module.scss";
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, reactive } from 'vue';
 export default defineComponent({
   props: {
     item: {
@@ -23,17 +23,17 @@ export default defineComponent({
     }
     
     return () => (
-      <div class="component-view input-item-view">
+      <div class="component-view input-item-view df-bt">
         <div class="item-label">
           {
             item.data.required
               ? <span class="required-icon">*</span>
               : null
           }
-          {item.data?.title}
+          <div>{item.data?.title} {item.data?.unit ? `(${ item.data.unit})` :''}</div>
         </div>
-        <div class="item-input-many">
-          <textarea class="input-textarea-box" rows="4" placeholder={item.data.tips} v-model={item.data.value} onBlur={onBlurEvent} ></textarea>
+        <div class="item-input">
+          <input class="input-box" type="number" placeholder={item.data.tips} v-model={item.data.value} onBlur={onBlurEvent} />
         </div>
       </div>
     )
