@@ -5,9 +5,8 @@
  * 组件key: radio_choice
  * */
 import "@/styles/module.scss";
-import { Dialog } from "vant";
 import { defineComponent, reactive } from 'vue';
-
+import SelectRadio from "@/components/module-dialog/radio.vue";
 export default defineComponent({
   props: {
     item: {
@@ -17,22 +16,20 @@ export default defineComponent({
       },
     }
   },
-  setup(props: any, { emit }) {
-    let { item } = props
 
+
+  setup(props: any, { emit }) {
+    let { item } = props;
+    let popup = reactive({
+      radioSelectVisible: true, //单选框
+    });
     //调起单选选择窗口
-    let showSelectPopup = (data: any, key: string) => {
-      console.log(data)
-      console.log(key)
+    let showSelectPopup = (item: any, key: string) => {
+      emit('handleSelectRadio', item)
     }
     //移除选项
-    let removeValue = (data: any) => {
-    }
-    let ShowDialog = () => {
-      <div>
-        <select-radio v-if="radioSelectVisible" initData="curSelectViewData"
-        ></select-radio>
-      </div >
+    let removeValue = (item: any) => {
+      item.data.value = '';
     }
     return () => (
       <>
@@ -59,9 +56,14 @@ export default defineComponent({
                   <i class="iconfont icon-guanbi11 close-icon" onClick={() => removeValue(item)}></i>
                 </div>
             }
+
           </div>
         </div>
-        {ShowDialog()}
+
+        {/* <van-popup v-model={[popup.radioSelectVisible, 'show']} position="bottom">
+          <SelectRadio initData={item} selectCallback={selectCallback}
+            close="popup.radioSelectVisible =false"></SelectRadio>
+        </van-popup> */}
       </>
     )
   },

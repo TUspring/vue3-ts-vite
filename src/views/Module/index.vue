@@ -24,35 +24,58 @@
 
         <!-- 4、单选框 -->
         <component :is="CurrentCompoent['radio_choice']" v-if="item.key ==='radio_choice'" :item="item"
-          @changeCallback="storageValueChange"></component>
+          @changeCallback="storageValueChange" @handleSelectRadio="handleSelectRadio"></component>
       </div>
     </div>
+
+
+    <van-popup v-model:show="popup.radioSelectVisible" position="bottom">
+      <SelectRadio v-if="popup.radioSelectVisible" :initData="state.curSelectViewData" @selectCallback="selectCallback"
+        @close="popup.radioSelectVisible =false"></SelectRadio>
+    </van-popup>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { reactive, toRefs, ref, onMounted, onActivated, getCurrentInstance, markRaw, defineAsyncComponent } from "vue";
   import { useRouter } from 'vue-router'
-
+  import { Dialog, Popup } from "vant";
+  import SelectRadio from "@/components/module-dialog/radio.vue";
   const CurrentCompoent = reactive({
-    'single_input': markRaw(defineAsyncComponent(() => import('@/components/module/single-input'))),
-    'multiple_input': markRaw(defineAsyncComponent(() => import('@/components/module/multiple-input'))),
-    'number_input': markRaw(defineAsyncComponent(() => import('@/components/module/number-input'))),
-    'radio_choice': markRaw(defineAsyncComponent(() => import('@/components/module/radio-choice'))),
+    'single_input': markRaw(defineAsyncComponent(() => import('./module-unit/single-input'))),
+    'multiple_input': markRaw(defineAsyncComponent(() => import('./module-unit/multiple-input'))),
+    'number_input': markRaw(defineAsyncComponent(() => import('./module-unit/number-input'))),
+    'radio_choice': markRaw(defineAsyncComponent(() => import('./module-unit/radio-choice'))),
   })
   const { ctx, proxy: { $http } } = getCurrentInstance()
   let routeInfo = useRouter().currentRoute?.value?.query
   let tableFormTotalList = reactive([])
   let state = reactive({
     detailInfo: {},
+    curSelectViewData: {},
     currentModuleId: null, //组件id
     currentTableRowIndex: 0, //索引
+  });
+  let popup = reactive({ 
+    radioSelectVisible: false, //单选框
   });
 
   onMounted(async () => {
     getModuleDetail()
   })
-
+  const handleSelectRadio = (data) => {
+    state.curSelectViewData = data;
+    popup.radioSelectVisible = true
+  }
+  const selectCallback = (data) => {
+    state.detailInfo.control_list.map(item => {
+      if (item.id === state.curSelectViewData.id) {
+        item.data.value = data;
+        storageValueChange(item)
+      }
+      return item;
+    }); 
+  }
   const getModuleDetail = () => {
     $http.approvalModuleDetail({
       id: routeInfo.id,
@@ -119,36 +142,4 @@
 <style scoped lang="scss">
   @import "styles/popup-table-edit.scss";
   @import "styles/index.scss";
-
-  /* ::v-deep {
-
-    .ProvCityHeaderConfirm,
-    .ProvCityHeaderCancle {
-      color: #409eff !important;
-    }
-
-    .footer-box .mint-button {
-      height: 48px;
-    }
-
-    .mint-cell-wrapper {
-      background-image: none;
-      border-bottom: 1px solid #eee;
-    }
-
-    .mint-button--small {
-      padding: 0 40px;
-      height: 40px;
-      line-height: 40px;
-    }
-
-    .ProvCityBoxBg {
-      z-index: 2500 !important;
-      background: #0000006e !important;
-    }
-
-    .ProvCityBox {
-      z-index: 2599 !important;
-    }
-  } */
 </style>

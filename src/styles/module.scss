@@ -1,4 +1,3 @@
-
 .component-view {
   margin-top: 10px;
   position: relative;
@@ -15,7 +14,6 @@
     font-size: 14px;
   }
 }
-
 
 .add-row {
   width: 100%;
@@ -45,7 +43,6 @@
     align-items: center;
     justify-content: flex-start;
     position: relative;
-
 
     li {
       height: 100%;
@@ -151,7 +148,6 @@
   }
 }
 
-
 .table-list-type {
   .component-view {
     margin-top: 0px !important;
@@ -231,6 +227,14 @@
   }
 }
 
+.required-icon {
+  color: #f83434;
+  top: 15px;
+  left: 8px;
+  font-size: 18px;
+  position: absolute;
+}
+
 .item-label {
   font-size: 16px;
   flex-shrink: 0;
@@ -281,7 +285,6 @@
   }
 }
 
-  
 .view-item-icon {
   color: #409eff;
 
@@ -290,4 +293,12 @@
   }
 }
 
- 
+.selected-info {
+  display: flex;
+  align-items: center;
+
+  .close-icon {
+    color: #999;
+    margin-left: 8px;
+  }
+}
