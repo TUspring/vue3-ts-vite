@@ -43,7 +43,9 @@
     methods: {
       selectChange() {
         this.$emit('selectCallback', this.selectedValue)
-        this.close()
+        setTimeout(() => {
+          this.close()
+        }, 500);
       },
       submit() {
         this.initData.data.option.push(this.addValue)
@@ -126,12 +128,5 @@
     border-radius: 3px;
     color: #fff;
     font-size: 12px;
-  }
-
-  ::v-deep {
-    .mint-cell-wrapper {
-      background-image: none;
-      border-bottom: 1px solid #eee;
-    }
   }
 </style>

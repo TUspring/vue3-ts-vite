@@ -5,13 +5,16 @@
         <i class="iconfont icon-xiala"></i>
       </div>
       <div class="title">多选项</div>
-      <div >
-        <mt-button type="primary" size="small" @click="confirm">确定</mt-button>
-        
+      <div>
+        <van-button type="primary" size="small" @click="confirm">确定</van-button>
       </div>
     </div>
-    <div style="padding-bottom: 50px;max-height: 400px;overflow: auto;">
-      <mt-checklist v-model="selectedValue" :options="optionData"></mt-checklist>
+    <div class="popup-content">
+      <van-checkbox-group v-model="selectedValue" class="select-group">
+        <van-checkbox class="subitem" :name="item" v-for="(item, index) in optionData" :key="index">
+          {{item}}
+        </van-checkbox>
+      </van-checkbox-group>
       <div>
         <input class="add-input-box" type="text" placeholder="自定义" v-model="addValue" />
         <span class="add-btn" @click="submit">增加</span>
@@ -21,19 +24,18 @@
 </template>
 
 <script>
-  import { Checklist } from 'mint-ui';
   export default {
     data() {
       return {
         addValue: '',
-        selectedValue:[],
+        selectedValue: [],
         optionData: [],
       }
     },
-    props:{
-      initData:{
+    props: {
+      initData: {
         type: Object,
-        default: ()=> {}
+        default: () => { }
       }
     },
     mounted() {
@@ -42,14 +44,18 @@
       this.selectedValue = arr ? arr : [];
     },
     methods: {
-      confirm(){
+      confirm() {
         this.$emit('selectCallback', this.selectedValue)
-        this.close()
+        setTimeout(() => {
+          this.close()
+        }, 500);
       },
-      submit(){
-        this.initData.data.option.push(this.addValue)
+      submit() {
+        if (this.addValue) {
+          this.initData.data.option.push(this.addValue)
+        }
       },
-      close(){
+      close() {
         this.$emit('close')
       }
     }
@@ -83,7 +89,25 @@
         font-weight: bold;
       }
     }
+
+    .select-group {
+      padding: 0 16px;
+
+      .subitem {
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+      }
+    }
   }
+
+  .popup-content {
+    padding-bottom: 50px;
+    max-height: 400px;
+    overflow: auto;
+    padding-top: 10px;
+  }
+
   .add-input-box {
     width: 150px;
     height: 32px;
@@ -94,9 +118,11 @@
     margin-top: 10px;
     border-bottom: 1px solid #e5e5e5;
   }
-  .add-input-box::placeholder{
+
+  .add-input-box::placeholder {
     color: #c9c9c9;
   }
+
   .add-btn {
     display: inline-block;
     background: #409eff;
@@ -104,12 +130,5 @@
     border-radius: 3px;
     color: #fff;
     font-size: 12px;
-  }
-
-  ::v-deep{
-    .mint-cell-wrapper{
-      background-image: none;
-      border-bottom: 1px solid #eee;
-    }
   }
 </style>

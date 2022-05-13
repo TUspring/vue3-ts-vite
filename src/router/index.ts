@@ -2,13 +2,13 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
 const Home = () => import("../views/Home/index.vue")
 const Login = () => import("../views/Login/index.vue")
-const Detail = () => import("../views/Detail/index.vue")
+const FlowList = () => import("../views/FlowList/index.vue")
 const Module = () => import("../views/Module/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
-  { path: '/module', name: 'module', component: Module },
-  { path: '/detail/:id/:item', name: 'Detail', component: Detail },
+  { path: '/module', name: 'Module', component: Module },
+  { path: '/flowList', name: 'FlowList', component: FlowList },
   { path: '/login', name: 'Login', component: Login }
 ]
 
@@ -19,7 +19,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-    if (window.localStorage.getItem('ACCESS_TOKEN')) {  
+    if (window.localStorage.getItem('ACCESS_TOKEN')) {
       next();
     } else {
       next({

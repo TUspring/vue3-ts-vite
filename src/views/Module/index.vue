@@ -24,14 +24,22 @@
 
         <!-- 4、单选框 -->
         <component :is="CurrentCompoent['radio_choice']" v-if="item.key ==='radio_choice'" :item="item"
-          @changeCallback="storageValueChange" @handleSelectRadio="handleSelectRadio"></component>
+          @changeCallback="storageValueChange" @handleSelectRadio="handlePopup"></component>
+
+        <!-- 5、多选框 -->
+        <component :is="CurrentCompoent['multiple_choice']" v-if="item.key ==='multiple_choice'" :item="item"  @changeCallback="storageValueChange"  @handleSelectRadio="handlePopup"></component>
       </div>
     </div>
 
-
+    <!-- 单选窗口 -->
     <van-popup v-model:show="popup.radioSelectVisible" position="bottom">
       <SelectRadio v-if="popup.radioSelectVisible" :initData="state.curSelectViewData" @selectCallback="selectCallback"
         @close="popup.radioSelectVisible =false"></SelectRadio>
+    </van-popup>
+    <!-- 多选窗口 -->
+    <van-popup v-model:show="popup.multipleSelectVisible" position="bottom">
+      <SelectCheck v-if="popup.multipleSelectVisible" :initData="state.curSelectViewData"
+        @selectCallback="selectCallback" @close="popup.multipleSelectVisible =false"></SelectCheck>
     </van-popup>
   </div>
 </template>
@@ -39,13 +47,14 @@
 <script lang="ts" setup>
   import { reactive, toRefs, ref, onMounted, onActivated, getCurrentInstance, markRaw, defineAsyncComponent } from "vue";
   import { useRouter } from 'vue-router'
-  import { Dialog, Popup } from "vant";
   import SelectRadio from "@/components/module-dialog/radio.vue";
+  import SelectCheck from "@/components/module-dialog/checklist.vue";
   const CurrentCompoent = reactive({
     'single_input': markRaw(defineAsyncComponent(() => import('./module-unit/single-input'))),
     'multiple_input': markRaw(defineAsyncComponent(() => import('./module-unit/multiple-input'))),
     'number_input': markRaw(defineAsyncComponent(() => import('./module-unit/number-input'))),
     'radio_choice': markRaw(defineAsyncComponent(() => import('./module-unit/radio-choice'))),
+    'multiple_choice': markRaw(defineAsyncComponent(() => import('./module-unit/multiple-choice'))),
   })
   const { ctx, proxy: { $http } } = getCurrentInstance()
   let routeInfo = useRouter().currentRoute?.value?.query
@@ -56,17 +65,25 @@
     currentModuleId: null, //组件id
     currentTableRowIndex: 0, //索引
   });
-  let popup = reactive({ 
+  let popup = reactive({
     radioSelectVisible: false, //单选框
+    multipleSelectVisible: false, //多选框
   });
 
   onMounted(async () => {
     getModuleDetail()
   })
-  const handleSelectRadio = (data) => {
+  const handlePopup = (data, key) => {
     state.curSelectViewData = data;
-    popup.radioSelectVisible = true
+    if(key === 'radio'){
+      popup.radioSelectVisible = true
+    }else if(key === 'check'){
+      popup.multipleSelectVisible = true
+    }
   }
+  /**
+   * 选择回调
+   * */ 
   const selectCallback = (data) => {
     state.detailInfo.control_list.map(item => {
       if (item.id === state.curSelectViewData.id) {
@@ -74,8 +91,11 @@
         storageValueChange(item)
       }
       return item;
-    }); 
+    });
   }
+  /**
+   * 组件详情内容
+  */
   const getModuleDetail = () => {
     $http.approvalModuleDetail({
       id: routeInfo.id,
@@ -102,7 +122,9 @@
     });
   }
 
-  //缓存改变的值
+  /**
+   * 缓存改变的值
+  */
   const storageValueChange = (info) => {
     let statisticsStatus = false; //表单是否有合计项
     if (tableFormTotalList.length > 0) {

@@ -6,7 +6,6 @@
  * */
 import "@/styles/module.scss";
 import { defineComponent, reactive } from 'vue';
-import SelectRadio from "@/components/module-dialog/radio.vue";
 export default defineComponent({
   props: {
     item: {
@@ -20,19 +19,16 @@ export default defineComponent({
 
   setup(props: any, { emit }) {
     let { item } = props;
-    let popup = reactive({
-      radioSelectVisible: true, //单选框
-    });
     //调起单选选择窗口
-    let showSelectPopup = (item: any, key: string) => {
-      emit('handleSelectRadio', item)
+    let showSelectPopup = (item: any) => {
+      emit('handleSelectRadio', item, 'radio')
     }
     //移除选项
-    let removeValue = (item: any) => {
+    let removeValue = (event: any, item: any) => {
       item.data.value = '';
+      event.stopPropagation();//阻止冒泡
     }
     return () => (
-      <>
         <div class="component-view input-item-view df-bt">
           <div class="item-label">
             {
@@ -42,7 +38,7 @@ export default defineComponent({
             }
             <div>{item.data?.title}</div>
           </div>
-          <div class="item-view__right" onClick={() => showSelectPopup(item, 'radio')}>
+          <div class="item-view__right" onClick={() => showSelectPopup(item)}>
             {
               !item.data.value
                 ?
@@ -53,18 +49,12 @@ export default defineComponent({
                 :
                 <div class="selected-info">
                   <span>{item.data.value}</span>
-                  <i class="iconfont icon-guanbi11 close-icon" onClick={() => removeValue(item)}></i>
+                  <i class="iconfont icon-guanbi11 close-icon" onClick={(e) => removeValue(e, item)}></i>
                 </div>
             }
 
           </div>
-        </div>
-
-        {/* <van-popup v-model={[popup.radioSelectVisible, 'show']} position="bottom">
-          <SelectRadio initData={item} selectCallback={selectCallback}
-            close="popup.radioSelectVisible =false"></SelectRadio>
-        </van-popup> */}
-      </>
+        </div> 
     )
   },
 });

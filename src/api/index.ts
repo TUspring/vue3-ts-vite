@@ -19,6 +19,21 @@ class Basic extends Abstract {
   saveEditModule(data: any) {
     return this.postRequest({ url: '/api/user/approval/save', data })
   }
-
+  //处理列表
+  allFlowList(params = {}) {
+    return this.getRequest({ url: '/api/user/approval/get_all_audit', params })
+  }
+  //处理列表
+  flowHandleList(params = {}) {
+    return this.getRequest({ url: '/api/user/approval/handle_list', params })
+  }
+  //发起列表
+  submitList(params = {}) {
+    return this.getRequest({ url: '/api/user/approval/submit_list', params })
+  }
+  //抄送列表
+  carbonList(params = {}) {
+    return this.getRequest({ url: '/api/user/approval/carbon_copy_list', params })
+  }
 }
 export default new Basic()

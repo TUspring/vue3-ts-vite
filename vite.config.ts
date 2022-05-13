@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
-// https://vitejs.dev/config/
+import path from 'path' 
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   base: './', // 打包路径
@@ -28,6 +27,7 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/crm/, '')
       }
     },
-    cors: true
+    cors: true,
+    hmr: true
   }
 })
