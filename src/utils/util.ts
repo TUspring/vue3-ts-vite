@@ -1,4 +1,4 @@
-Date.prototype.format = function (fmt) {
+Date.prototype.format = function (fmt: string) {
   var o = {
     "M+": this.getMonth() + 1, //月份
     "d+": this.getDate(), //日
@@ -20,14 +20,14 @@ var util = {
   /**
    * 处理金额，两位小数
   */
-  money: (value) => {
+  money: (value: any) => {
     return isNaN(value) ? '' : Math.round(value * 100) / 100
   },
 
   /**
    * 千位符处理
   */
-  formatNumber(num) {
+  formatNumber(num: any) {
     if (isNaN(num)) {
       throw new TypeError("num is not a number");
     }
@@ -36,8 +36,8 @@ var util = {
 
   /**
    * 日期处理
-   * */ 
-  timeFormat(time) {
+   * */
+  timeFormat(time: string) {
     if (new Date().format('yyyy') === new Date(time).format('yyyy')) {
       return new Date(time).format('MM-dd');
     } else {
@@ -48,14 +48,14 @@ var util = {
   /**
    * 对毫分金额处理
   */
-  moneyFormat: (value) => { 
+  moneyFormat: (value: any) => {
     return isNaN(value) ? '' : (Math.round(value) / 100).toFixed(2)
   },
 
   /**
    * 处理距离单位； 超1000米，显示公里
   */
-  distanceFormat: (value) => {
+  distanceFormat: (value: number) => {
     if (value < 1000) {
       return value + '米';
     } else {
@@ -63,15 +63,15 @@ var util = {
     }
   },
 
-  scoreFormat: (value) => {
+  scoreFormat: (value: number) => {
     return isNaN(value) ? '' : (value / 100).toFixed(1)
   },
 
-  dateFormat: (time) => {
+  dateFormat: (time: string) => {
     return new Date(time).format('MM月dd日')
   },
 
-  weekFormat: (time) => {
+  weekFormat: (time: string) => {
     let weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     return weekArr[new Date(time).getDay()]
   },
@@ -79,7 +79,7 @@ var util = {
   /**
    * 文本标签处理
   */
-  convertHtmlToText(inputText) {
+  convertHtmlToText(inputText: string) {
     let returnText = "" + inputText;
     returnText = returnText.replace(/<(?:.|\s)*?>/g, "");
     return returnText;
@@ -87,8 +87,8 @@ var util = {
 
   /**
    * 处理头像名字
-   * */ 
-  substringName(name) {
+   * */
+  substringName(name: string) {
     var pattern = new RegExp("[\u4E00-\u9FA5]+");
     if (pattern.test(name)) {
       if (name.length > 3) return name.substr(2, 2);
@@ -102,8 +102,8 @@ var util = {
 
   /**
    * 数字转中文大写
-   * */ 
-  numberToString(n) {
+   * */
+  numberToString(n: any) {
     if (!n) return n;
     if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)) {
       return "数据非法";  //判断数据是否大于0
@@ -120,11 +120,11 @@ var util = {
     }
     return str.replace(/零(千|百|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|元)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^元零?|零分/g, "").replace(/元$/g, "元整"); // 替换掉数字里面的零字符，得到结果
   },
-  
+
   /**
    * 数组去重
   */
-  uniqueArray(arr) {
+  uniqueArray(arr: Array<number>) {
     var hash = {};
     arr = arr.reduce((item, next) => {
       hash[next.key] ? '' : hash[next.key] = true && item.push(next);
@@ -133,7 +133,7 @@ var util = {
     return arr;
   },
 
-  isEmpty(obj) {
+  isEmpty(obj: any) {
     if (obj == undefined || obj == null || new String(obj).trim() == '') {
       return true;
     } else {
@@ -141,47 +141,9 @@ var util = {
     }
   },
 
-  setData(key, value) {
-    var curTime = new Date().getTime();
-    localStorage.setItem(key, JSON.stringify({ data: JSON.stringify(value), time: curTime }));
-  },
-
-  getData(key, exp = 0) {
-    var data = localStorage.getItem(key);
-    if (this.isEmpty(data)) {
-      return "";
-    }
-    var dataObj = JSON.parse(data);
-    if ((exp > 0) && (new Date().getTime() - dataObj.time > (exp * 1000))) {
-      return "";
-    } else {
-      var dataObjDatatoJson = JSON.parse(dataObj.data)
-      return dataObjDatatoJson;
-    }
-  },
-
-  removeData(key) {
-    localStorage.removeItem(key)
-  },
-
-  interval(func, w, t) {
-    var interv = () => {
-      if (typeof t === "undefined" || t-- > 0) {
-        setTimeout(interv, w);
-        try {
-          func.call(null);
-        } catch (e) {
-          t = 0;
-          throw e.toString(); //返回十进制数
-        }
-      }
-    };
-    setTimeout(interv, w);
-    return { clear() { t = 0 } };
-  },
 
   //获取数据类型
-  getType(obj) {
+  getType(obj: any) {
     var toString = Object.prototype.toString;
     var map = {
       '[object Boolean]': 'boolean',
@@ -202,7 +164,7 @@ var util = {
   },
 
   //深克隆
-  dataDeepClone(data) {
+  dataDeepClone(data: any) {
     var type = this.getType(data);
     var obj;
     if (type === 'array') {
@@ -225,32 +187,20 @@ var util = {
     return obj;
   },
 
-  // 加密手机号码
-  phoneSecurity(number) {
-    var phone_number = "";
-    for (var i = 0; i < number.length; i++) {
-      if (i > 2 && i < 7) {
-        phone_number = phone_number + "*";
-      } else {
-        phone_number = phone_number + number[i];
-      }
-    }
-
-    return phone_number;
-  },
-  encryptionNumber(number) {
+  // 加密手机号码 
+  encryptionNumber(value: string) {
     var encryption = "";
-    for (var i = 0; i < number.length; i++) {
+    for (var i = 0; i < value.length; i++) {
       if (i > 2 && i < 7) {
         encryption = encryption + "*";
       } else {
-        encryption = encryption + number[i];
+        encryption = encryption + value[i];
       }
     }
 
     return encryption;
   },
-  onlyNumber(code) {
+  onlyNumber(code: string) {
     var reg = /^[0-9]*$/;
     if (!code.match(reg)) {
       code = code.replace(/[^\d.]/g, "");
