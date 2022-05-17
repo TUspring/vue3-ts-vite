@@ -27,7 +27,8 @@
           @changeCallback="storageValueChange" @handleSelectRadio="handlePopup"></component>
 
         <!-- 5、多选框 -->
-        <component :is="CurrentCompoent['multiple_choice']" v-if="item.key ==='multiple_choice'" :item="item"  @changeCallback="storageValueChange"  @handleSelectRadio="handlePopup"></component>
+        <component :is="CurrentCompoent['multiple_choice']" v-if="item.key ==='multiple_choice'" :item="item"
+          @changeCallback="storageValueChange" @handleSelectRadio="handlePopup"></component>
       </div>
     </div>
 
@@ -75,15 +76,21 @@
   })
   const handlePopup = (data, key) => {
     state.curSelectViewData = data;
-    if(key === 'radio'){
-      popup.radioSelectVisible = true
-    }else if(key === 'check'){
-      popup.multipleSelectVisible = true
+    switch (key) {
+      case key === 'radio':
+        popup.radioSelectVisible = true;
+      case key === 'check':
+        popup.multipleSelectVisible = true;
     }
+    // if(key === 'radio'){
+    //   popup.radioSelectVisible = true
+    // }else if(key === 'check'){
+    //   popup.multipleSelectVisible = true
+    // }
   }
   /**
    * 选择回调
-   * */ 
+   * */
   const selectCallback = (data) => {
     state.detailInfo.control_list.map(item => {
       if (item.id === state.curSelectViewData.id) {

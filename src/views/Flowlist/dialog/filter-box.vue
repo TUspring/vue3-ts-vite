@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="confirm-box">
-      <mt-button type="default" size="small" style="margin-right: 10px" @click="reset">重置</mt-button>
-      <mt-button type="primary" size="small" @click="confirm">确定</mt-button>
+      <van-button type="default" size="small" style="margin-right: 10px" @click="reset">重置</van-button>
+      <van-button type="primary" size="small" @click="confirm">确定</van-button>
     </div>
   </div>
 </template>
@@ -57,15 +57,16 @@
       },
     },
     mounted() {
-      console.log(this.listType)
       if (this.searchForm.group_id) {
         this.initData.map(j => {
-          this.$set(j, 'selected', j.id == this.searchForm.group_id ? true : false)
+          j.selected =  j.id == this.searchForm.group_id ? true : false
+          return j;
         })
       }
       if (this.searchForm.status) {
         this.statusList.map(j => {
-          this.$set(j, 'selected', j.id == this.searchForm.status ? true : false)
+          j.selected = j.id == this.searchForm.status ? true : false
+          return j;
         })
       }
     },
@@ -79,20 +80,24 @@
       },
       selectStatus(item) {
         this.statusList.map(j => {
-          this.$set(j, 'selected', j.id === item.id ? true : false)
+          j.selected = j.id === item.id ? true : false
+          return j;
         })
       },
       selectFormType(item) {
         this.initData.map(j => {
-          this.$set(j, 'selected', j.id === item.id ? !j.selected : false)
+          j.selected = j.id === item.id ? !j.selected : false
+          return j;
         })
       },
       reset() {
         this.statusList.map(j => {
-          this.$set(j, 'selected', j.id === 0 ? true : false)
+          j.selected = j.id === 0 ? true : false
+          return j;
         })
         this.initData.map(j => {
-          this.$set(j, 'selected', false)
+          j.selected = false
+          return j;
         })
       },
       close() {
@@ -179,6 +184,7 @@
         white-space: nowrap;
         padding: 0 5px;
         box-sizing: border-box;
+
         &:nth-child(2n) {
           margin-left: 2%;
         }

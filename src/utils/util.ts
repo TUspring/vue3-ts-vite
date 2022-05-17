@@ -1,4 +1,4 @@
-Date.prototype.format = function (fmt: string) {
+Date.prototype.format = function (fmt: string): string {
   var o = {
     "M+": this.getMonth() + 1, //月份
     "d+": this.getDate(), //日
@@ -44,6 +44,9 @@ var util = {
       return new Date(time).format('yyyy-MM-dd');
     }
   },
+  dateFormat: (time: string) => {
+    return new Date(time).format('MM月dd日')
+  },
 
   /**
    * 对毫分金额处理
@@ -67,9 +70,6 @@ var util = {
     return isNaN(value) ? '' : (value / 100).toFixed(1)
   },
 
-  dateFormat: (time: string) => {
-    return new Date(time).format('MM月dd日')
-  },
 
   weekFormat: (time: string) => {
     let weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
@@ -124,9 +124,9 @@ var util = {
   /**
    * 数组去重
   */
-  uniqueArray(arr: Array<number>) {
-    var hash = {};
-    arr = arr.reduce((item, next) => {
+  uniqueArray(arr: any) {
+    var hash: { [key: string]: any } = {};
+    arr = arr.reduce((item: any, next: any) => {
       hash[next.key] ? '' : hash[next.key] = true && item.push(next);
       return item;
     }, []);
@@ -163,30 +163,6 @@ var util = {
     return map[toString.call(obj)];
   },
 
-  //深克隆
-  dataDeepClone(data: any) {
-    var type = this.getType(data);
-    var obj;
-    if (type === 'array') {
-      obj = [];
-    } else if (type === 'object') {
-      obj = {};
-    } else {
-      //不再具有下一层次
-      return data;
-    }
-    if (type === 'array') {
-      for (var i = 0, len = data.length; i < len; i++) {
-        obj.push(this.dataClone(data[i]));
-      }
-    } else if (type === 'object') {
-      for (var key in data) {
-        obj[key] = this.dataClone(data[key]);
-      }
-    }
-    return obj;
-  },
-
   // 加密手机号码 
   encryptionNumber(value: string) {
     var encryption = "";
@@ -208,7 +184,7 @@ var util = {
     return code;
   },
   //清楚空格
-  clearSpace(str) {
+  clearSpace(str: string) {
     return str.replace(/\s+/g, "");
   },
   //倒计时
@@ -223,23 +199,23 @@ var util = {
     }, 1000);
   },
   // 检验邮箱
-  checkEmail(str) {
+  checkEmail(str: string) {
     var reEmail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
     return !reEmail.test(str) ? false : true;
   },
   // 检验手机
-  checkPhone(str) {
+  checkPhone(str: string) {
     var rePhone = /^1\d{10}$/;
     return !rePhone.test(str) ? false : true;
   },
   // 检验电话
-  checkTel(str) {
+  checkTel(str: string) {
     var reTel = /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
     return !reTel.test(str) ? false : true;
   },
 
   // 教验传真
-  checkFax(str) {
+  checkFax(str: string) {
     var reFax = /^(\d{3,4}-)?\d{7,8}$/;
     return !reFax.test(str) ? false : true;
   },

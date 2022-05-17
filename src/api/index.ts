@@ -1,22 +1,22 @@
 import Abstract from '../axios/index';
 
 class Basic extends Abstract {
-  sendCode(params: any) {
+  sendCode(params: object) {
     return this.getRequest({ url: '/api/user/verify_code', params })
   }
-  userLogin(data: any) {
+  userLogin(data: object) {
     return this.postRequest({ url: '/api/user/phone_login', data })
   }
   //模板列表
-  approvalModuleList(data: any) {
+  approvalModuleList(data: object) {
     return this.postRequest({ url: '/api/user/approval/list', data })
   }
   //模板详情
-  approvalModuleDetail(data: any) {
+  approvalModuleDetail(data: object) {
     return this.postRequest({ url: '/api/user/approval/detail', data })
   }
   //保存提审模板
-  saveEditModule(data: any) {
+  saveEditModule(data: object) {
     return this.postRequest({ url: '/api/user/approval/save', data })
   }
   //处理列表

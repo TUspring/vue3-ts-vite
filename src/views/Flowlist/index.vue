@@ -31,8 +31,7 @@
           </div>
           <div class="audit-info df-bt">
             <div class="df-left">
-              <!-- |substringName -->
-              <span class="user-icon">{{item.user_name }}</span>
+              <span class="user-icon">{{ substringName(item.user_name) }}</span>
               <span>由{{item.user_name}}提交</span>
             </div>
             <div class="approval-status">
@@ -55,18 +54,24 @@
     <div class="no-more" v-if="state.isListEnd && state.listData.length !== 0">没有更多了~</div>
 
     <!-- 筛选窗口 -->
-    <!-- <mt-popup v-model="filterVisible" position="bottom" style="width: 100%;">
-      <filter-box v-if="filterVisible" :listType="queryInfo.type" :initData="initData" :searchForm="searchForm"
-        @selectCallback="selectCallback" @close="filterVisible =false"></filter-box>
-    </mt-popup> -->
+    <van-popup v-model:show="state.filterVisible" position="bottom" style="width: 100%;">
+      <filter-box v-if="state.filterVisible" :listType="routeInfo.type" :initData="state.initData"
+        :searchForm="state.searchForm" @selectCallback="selectCallback" @close="state.filterVisible =false">
+      </filter-box>
+    </van-popup>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, toRefs, ref, watch, onMounted, onActivated, getCurrentInstance, markRaw, defineAsyncComponent } from "vue";
+  import { reactive, ref, watch, onMounted, getCurrentInstance, } from "vue";
+  import { useStore } from "vuex";
   import { useRouter } from 'vue-router'
   import FilterBox from "./dialog/filter-box.vue";
-  const { ctx, proxy: { $http } } = getCurrentInstance()
+  import { Toast } from 'vant'
+  const { ctx, proxy: { $http, $util } } = getCurrentInstance()
+  const router = useRouter();
+  const store = useStore()
+
   let routeInfo = useRouter().currentRoute?.value?.query
   let state = reactive({
     baseUrl: JSON.parse(localStorage.getItem("ENV_HTTP")),
@@ -86,10 +91,11 @@
     filterVisible: false,
     loaded: false,
     listData: [],
-    initData: []
+    initData: [],
   });
   watch(() => state.keyword, () => {
     state.isListEnd = false;
+    state.loaded = false;
     state.listTotalCount = 1;
     httpSearchSubmit()
   })
@@ -102,11 +108,19 @@
     getListInfo();
   })
   const selectCallback = ({ group_id, status }) => {
-    // this.searchForm.group_id = group_id;
-    // this.searchForm.status = status;
-    // this.pageInfo.page = 0;
-    // this.listData = []
-    // this.getListInfo();
+    state.searchForm.group_id = group_id;
+    state.searchForm.status = status;
+    state.pageInfo.page = 0;
+    state.listData = []
+    state.loaded = false;
+    getListInfo();
+  }
+
+  /**
+   * 处理名字显示
+  */
+  const substringName = (name) => {
+    return $util.substringName(name)
   }
 
   const exportData = () => {
@@ -133,13 +147,16 @@
   }
 
   const navigateTo = (item) => {
-    this.$router.push({
+    router.push({
       path: '/flowDetail',
       query: item
     })
+    store.commit('storageFlowDetail', item)
   }
-
-  const getListInfo = () => {
+  /**
+   * 获取数据内容
+   * */
+  const getListInfo = async () => {
     let httpType = '';
     switch (routeInfo.key) {
       case 'all':
@@ -173,7 +190,7 @@
           state.listTotalCount = res.data.total;
           state.listLoading = false;
         } else {
-          // Toast(res.message)
+          Toast(res.message)
         }
         state.loaded = true;
       }).catch(error => {
@@ -228,6 +245,7 @@
       left: 0px;
       position: fixed;
       z-index: 9;
+
       .input-box {
         /* width: 75%; */
         height: 36px;

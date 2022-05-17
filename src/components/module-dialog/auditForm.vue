@@ -80,12 +80,8 @@
 </template>
 
 <script>
-  import { Indicator, Toast, Popup, Button, Checklist } from "mint-ui";
-  // import FilterBox from "./dialog/filter-box.vue";
-  export default {
-    components: {
-      // FilterBox
-    },
+  import { Indicator, Toast, Popup, Button, Checklist } from "mint-ui"; 
+  export default { 
     data() {
       return {
         timer: null,

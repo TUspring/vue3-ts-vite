@@ -114,6 +114,7 @@
       }
     })
   }
+  //绑定系统账号
   const bindSystemAmount = async () => { }
   //模板列表
   const getModuleList = async () => {

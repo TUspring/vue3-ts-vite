@@ -1,21 +1,5 @@
 <template>
-  <div class="popup-sign-box" ref="pageView">
-    <!-- <div class="sign-box__head df-bt">
-      <div @click="handleCancel">取消</div>
-      <div class="title">手写签名</div>
-      <div>
-        <mt-button type="primary" size="small" @click="handleGenerate">完成</mt-button>
-      </div>
-    </div> -->
-    <!-- <div class="sign-area">
-      <div class="operate-icon">
-        <i class="iconfont icon-eraser-o" @click="handleReset"></i>
-        <i class="iconfont icon-quanping"></i>
-      </div>
-      <vue-esign ref="esign" v-if="showEsign" :width="screenWidth" :height="200" style="border: 1px dashed #d5d5d5;border-radius: 4px;"
-        :isCrop="isCrop" :lineWidth="lineWidth" :lineColor="lineColor" :bgColor.sync="bgColor" />
-    </div> -->
-
+  <div class="popup-sign-box" ref="pageView"> 
     <div class="full-screen-box">
       <vue-esign class="esign-canvas" v-if="showEsign" ref="esign" :width="Number(offsetWidth)" :height="Number(offsetHeight)"
         :isCrop="isCrop" :lineWidth="lineWidth" :lineColor="lineColor" :bgColor.sync="bgColor" />

@@ -1,15 +1,19 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
-const Home = () => import("../views/Home/index.vue")
-const Login = () => import("../views/Login/index.vue")
-const FlowList = () => import("../views/FlowList/index.vue")
-const Module = () => import("../views/Module/index.vue")
+const Home = () => import("../views/home/index.vue")
+const Login = () => import("../views/login/index.vue")
+const FlowList = () => import("../views/flowList/index.vue")
+const Module = () => import("../views/module/index.vue")
+const Audit = () => import("../views/audit/index.vue")
+const Select = () => import("../views/select/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', name: 'Home', component: Home },
-  { path: '/module', name: 'Module', component: Module },
-  { path: '/flowList', name: 'FlowList', component: FlowList },
-  { path: '/login', name: 'Login', component: Login }
+  { path: '/', name: 'home', component: Home },
+  { path: '/module', name: 'module', component: Module },
+  { path: '/flowList', name: 'flowList', component: FlowList },
+  { path: '/audit', name: 'audit', component: Audit },
+  { path: '/select', name: 'select', component: Select },
+  { path: '/login', name: 'login', component: Login }
 ]
 
 const router = createRouter({

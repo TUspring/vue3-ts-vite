@@ -391,7 +391,7 @@
 </template>
 
 <script>
-  import { Indicator, Toast, Popup, Button, DatetimePicker, MessageBox, Lazyload } from "mint-ui";
+  // import { Indicator, Toast, Popup, Button, DatetimePicker, MessageBox, Lazyload } from "mint-ui";
   import vueArea from '@/components/city-picker';
   import ESign from "@/components/edit-dialog/esign.vue";
   import SelectRadio from "@/components/edit-dialog/radio.vue";

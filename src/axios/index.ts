@@ -10,7 +10,6 @@ import { Toast } from 'vant';
 const token = window.localStorage.getItem("userInfo") ? JSON.parse(window.localStorage.getItem("userInfo") || "").token : "",
   reqURL = '',
   header: object = {
-    // 'Content-Type': 'application/json;charset=UTF-8', //Payload
     'Content-Type': 'application/x-www-form-urlencoded', //Form Data
     'X-Requested-With': 'XMLHttpRequest',
     token: token

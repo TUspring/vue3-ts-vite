@@ -1,19 +1,19 @@
 import { createStore } from 'vuex'
 export default createStore({
   state: {
-    listData: { 1: 10 },
-    num: 10
+    listData: null,
+    flowDetail: {} //审批流程-单条记录数据
   },
   mutations: {
     setData(state, value) {
       state.listData = value
-    },
-    addNum(state) {
-      state.num = state.num + 10
+    }, 
+    storageFlowDetail(state, payload){
+      state.flowDetail = payload
     }
   },
   actions: {
-    setData(context, value) {
+    actionSetData(context, value) {
       context.commit('setData', value)
     }
   },
