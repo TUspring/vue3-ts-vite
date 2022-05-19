@@ -35,5 +35,9 @@ class Basic extends Abstract {
   carbonList(params = {}) {
     return this.getRequest({ url: '/api/user/approval/carbon_copy_list', params })
   }
+  //审批页详情数据
+  handleDetail(params = {}) {
+    return this.getRequest({ url: '/api/user/approval/audit_detail', params })
+  }
 }
 export default new Basic()

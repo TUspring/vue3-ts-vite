@@ -4,7 +4,7 @@
  * 
  * 组件key: single_input
  * */
-import "@/styles/module.scss";
+import "../styles/module.scss";
 import { defineComponent, reactive } from 'vue';
 export default defineComponent({
   props: {

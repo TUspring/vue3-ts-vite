@@ -9,26 +9,26 @@
         <div class="input-label">
           <i class="iconfont icon-shoujihao"></i>
         </div>
-        <input class="input-item" type="tel" v-model="state.phone" placeholder="请输入手机号">
+        <input class="input-item" type="tel" v-model="phone" placeholder="请输入手机号">
       </div>
       <div class="form-item">
         <div class="input-label">
           <i class="iconfont icon-yanzhengma1"></i>
         </div>
-        <input class="input-item" type="tel" v-model="state.code" placeholder="请输入短信验证码">
+        <input class="input-item" type="tel" v-model="code" placeholder="请输入短信验证码">
         <div class="input-right-addons">
           <span class="validate-code" :class="codeDelay > 0 ? 'is-disabled':''" @click="validCode">{{ codeDelay > 0
             ? codeDelay+'s后重发' : '获取验证码'}}</span>
         </div>
       </div>
       <div>
-        <van-button class="form-button" type="primary" :disabled='state.isAvailable' @click="login">登录</van-button>
+        <van-button class="form-button" type="primary" :disabled='isAvailable' @click="login">登录</van-button>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-  import { reactive, computed, getCurrentInstance } from "vue";
+  import { reactive, computed, toRefs, getCurrentInstance } from "vue";
   import { Toast } from 'vant'
   import { useRouter } from "vue-router";
   export default {
@@ -117,7 +117,6 @@
         localStorage.setItem('OA_USER_INFO', JSON.stringify(data));
         localStorage.setItem('ACCESS_TOKEN', data.token);
         localStorage.setItem('USERNAME', data.user_name);
-
         setTimeout(() => {
           router.push({
             path: '/'
@@ -126,7 +125,7 @@
       }
 
       return {
-        state,
+        ...toRefs(state),
         codeDelay,
         login,
         validCode

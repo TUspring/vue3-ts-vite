@@ -13,5 +13,5 @@ npm run dev
 ## 打包
 npm run build
 
-#如果出错，去掉package.json中build的 ‘vue-tsc --noEmit --skipLibCheck &&’  
+#如果打包出错，去掉package.json中build的 ‘vue-tsc --noEmit --skipLibCheck &&’  
 "build": "vue-tsc --noEmit --skipLibCheck && vite build",

@@ -8,7 +8,8 @@
     </div>
     <div class="popup-content">
       <van-radio-group v-model="selectedValue" class="radio-group">
-        <van-radio @click="selectChange" class="subitem" :name="item" v-for="(item, index) in optionData" :key="index">{{item}}</van-radio>
+        <van-radio @click="selectChange" class="subitem" :name="item" v-for="(item, index) in optionData" :key="index">
+          {{item}}</van-radio>
       </van-radio-group>
       <div>
         <input class="add-input-box" type="text" placeholder="自定义" v-model="addValue" />
@@ -18,15 +19,9 @@
   </div>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        addValue: '',
-        selectedValue: '',
-        optionData: []
-      }
-    },
+<script lang="ts">
+  import { reactive, defineComponent, onMounted, toRefs } from 'vue'
+  export default defineComponent({
     props: {
       initData: {
         type: Object,
@@ -35,26 +30,38 @@
         }
       }
     },
+    setup(props, contex) {
+      const dataMap = reactive({
+        addValue: '',
+        selectedValue: '',
+        optionData: []
+      })
+      onMounted(async () => {
+        dataMap.optionData = props.initData.data.option;
+        dataMap.selectedValue = props.initData.data.value || props.initData.value;
+      })
 
-    mounted() {
-      this.optionData = this.initData.data.option;
-      this.selectedValue = this.initData.data.value || this.initData.value;
-    },
-    methods: {
-      selectChange() {
-        this.$emit('selectCallback', this.selectedValue)
+      const selectChange = () => {
+        contex.emit('selectCallback', dataMap.selectedValue)
         setTimeout(() => {
-          this.close()
+          close()
         }, 500);
-      },
-      submit() {
-        this.initData.data.option.push(this.addValue)
-      },
-      close() {
-        this.$emit('close')
+      }
+      const submit = () => {
+        props.initData.data.option.push(dataMap.addValue)
+      }
+      const close = () => {
+        contex.emit('close')
+      }
+
+      return {
+        ...toRefs(dataMap),
+        selectChange,
+        submit,
+        close
       }
     }
-  }
+  })
 </script>
 
 <style lang="scss" scoped>

@@ -4,7 +4,7 @@
  * 
  * 组件key: multiple_input
  * */
-import "@/styles/module.scss";
+import "../styles/module.scss";
 import { defineComponent, ref, reactive } from 'vue';
 export default defineComponent({
   props: {
@@ -21,7 +21,7 @@ export default defineComponent({
     let onBlurEvent = () => {
       emit('changeCallback', item)
     }
-    
+
     return () => (
       <div class="component-view input-item-view">
         <div class="item-label">

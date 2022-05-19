@@ -148,9 +148,12 @@
 
   const navigateTo = (item) => {
     router.push({
-      path: '/flowDetail',
-      query: item
+      path: '/audit',
+      query: {
+        id: item.id
+      }
     })
+    // sessionStorage.setItem('storageFlowDetail', item)
     store.commit('storageFlowDetail', item)
   }
   /**
@@ -212,19 +215,6 @@
     }, 800)
   }
 
-  // export default {
-  //   beforeRouteLeave(to, from, next) {
-  //     if (to.name == 'flowDetail') {
-  //       sessionStorage.setItem('flowListFilterParam', JSON.stringify({
-  //         group_id: this.searchForm.group_id,
-  //         status: this.searchForm.status,
-  //       }))
-  //     } else {
-  //       sessionStorage.removeItem('flowListFilterParam')
-  //     }
-  //     next()
-  //   }
-  // };
 </script>
 
 <style lang="scss" scoped>

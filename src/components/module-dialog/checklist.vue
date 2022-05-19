@@ -23,43 +23,49 @@
   </div>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        addValue: '',
-        selectedValue: [],
-        optionData: [],
-      }
-    },
+<script lang="ts">
+  import { reactive, defineComponent, onMounted, toRefs } from 'vue'
+  export default defineComponent({
     props: {
       initData: {
         type: Object,
         default: () => { }
       }
     },
-    mounted() {
-      this.optionData = this.initData.data.option;
-      let arr = this.initData.data.value || this.initData.value;
-      this.selectedValue = arr ? arr : [];
-    },
-    methods: {
-      confirm() {
-        this.$emit('selectCallback', this.selectedValue)
+    setup(props, contex) {
+      const dataMap = reactive({
+        addValue: '',
+        selectedValue: [],
+        optionData: [],
+      })
+
+      onMounted(async () => {
+        dataMap.optionData = props.initData.data.option;
+        let arr = props.initData.data.value || props.initData.value;
+        dataMap.selectedValue = arr ? arr : [];
+      })
+
+      const confirm = () => {
+        contex.emit('selectCallback', dataMap.selectedValue)
         setTimeout(() => {
-          this.close()
+          close()
         }, 500);
-      },
-      submit() {
-        if (this.addValue) {
-          this.initData.data.option.push(this.addValue)
-        }
-      },
-      close() {
-        this.$emit('close')
+      }
+      const submit = () => {
+        props.initData.data.option.push(dataMap.addValue)
+      }
+      const close = () => {
+        contex.emit('close')
+      }
+
+      return {
+        ...toRefs(dataMap),
+        confirm,
+        submit,
+        close
       }
     }
-  }
+  })
 </script>
 
 <style lang="scss" scoped>
