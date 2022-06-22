@@ -77,8 +77,7 @@
   const store = useStore();
 
   // 获取上下文对象 
-  const { ctx, proxy: { $http } } = getCurrentInstance()
-
+  const { ctx, proxy: { $http, $util } } = getCurrentInstance()
   // 定义响应式数据
   const state = reactive({
     dataInfo: {},
@@ -94,8 +93,9 @@
 
   // DOM 加载完成后更新数据
   onMounted(() => {
-    getModuleList()
+    getModuleList() 
   });
+  
   const navigateToModule = (item) => {
     router.push({
       path: '/module',

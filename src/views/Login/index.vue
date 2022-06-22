@@ -53,7 +53,7 @@
           return true
         }
       })
- 
+
       //提交 登录请求
       const login = async () => {
         if (state.phone.length == '') {
@@ -91,6 +91,7 @@
         }
         httpGetCode();
       };
+      
       //请求验证码
       const httpGetCode = async () => {
         $http.sendCode({ phone: state.phone }).then(res => {

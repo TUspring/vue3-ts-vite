@@ -30,7 +30,7 @@ export default defineComponent({
               ? <span class="required-icon">*</span>
               : null
           }
-          {item.data?.title}
+          {item.data.title}
         </div>
         <div class="item-input-many">
           <textarea class="input-textarea-box" rows="4" placeholder={item.data.tips} v-model={item.data.value} onBlur={onBlurEvent} ></textarea>

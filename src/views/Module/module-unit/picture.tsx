@@ -7,7 +7,8 @@
 import "../styles/module.scss";
 import * as dd from "dingtalk-jsapi";
 import UploadBox from "@/components/upload/index.vue";
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
+
 export default defineComponent({
   props: {
     item: {
@@ -20,13 +21,9 @@ export default defineComponent({
   setup(props: any, { emit }) {
     let { item } = props;
     const baseUrl = JSON.parse(localStorage.getItem("ENV_HTTP") as string)
-    let showDateSelect = (item: any) => {
-      emit('handleSelectPopup', item, 'date')
-    }
-
     //移除选项
-    let removeValue = (event: any, item: any) => {
-      item.data.value = '';
+    let removeArrayValue = (event: any, item: any, index: number) => {
+      item.data.value.splice(index, 1)
       event.stopPropagation();//阻止冒泡
     }
     /**
@@ -40,15 +37,13 @@ export default defineComponent({
       }
     }
     let viewPhoto = (url: string) => {
-      let that = this;
       if (url.includes('.tif') || url.includes('.TIF')) {
         var useUrl = `${baseUrl}/api/get_image?url=${encodeURI(url)}`;
         dd.biz.util.previewImage({
           urls: [useUrl],//图片地址列表
           current: encodeURI(url),//当前显示的图片链接
           onSuccess: function (result) { },
-          onFail: function (err) {
-          }
+          onFail: function (err) { }
         })
       } else {
         var imgWidth = 0,
@@ -66,11 +61,26 @@ export default defineComponent({
             };
           };
         };
-        // imgLoad(url,  this.imgInfoCallback);
+        imgLoad(url, imgInfoCallback);
       }
     }
+    let imgInfoCallback = (width: number | string, height: number | string, url: string) => {
+      //钉钉微应用预览api在安卓设备上，如果图片尺寸很大会出现第一次看不到图片，再次打开预览才能看到， 判断当图片尺寸超过3000，用后端接口处理。
+      var useUrl = width > 3000 ? `${baseUrl}/api/get_image?url=${encodeURI(url)}&size=${width}` : encodeURI(url);
+      dd.biz.util.previewImage({
+        urls: [useUrl],//图片地址列表
+        current: encodeURI(url),//当前显示的图片链接
+        onSuccess: function (result) { },
+        onFail: function (err) { }
+      })
+    }
+    let showUpload = (item: any, key: string) => { }
 
-    let showUpload = (item:any, key:string) => { }
+    const uploadCallback = (url: string) => {
+      item.data.value = item.data.value ? [...item.data.value, url] : [url]
+      emit('changeCallback', item)
+    }
+
     return () => (
       <div class="component-view input-item-view" >
         <div class="item-label">
@@ -83,14 +93,16 @@ export default defineComponent({
         </div>
         <div class="images-list">
           {
-            item.data.value.map((path: any, i: number) => {
-              item.data.value && item.data.value.length > 0
-                ? <div class="images-item">
-                  <img src={imageFormat(path)} onClick={() => viewPhoto(`${baseUrl}${path}`)} />
-                  <i class="iconfont icon-guanbi11 close-icon remove-img-icon" onClick={(e) => removeValue(e, item)}></i>
-                </div>
-                : null
-            })
+            item.data.value && item.data.value.length > 0 ?
+              item.data.value.map((path: string, index: number) => {
+                return (
+                  <div class="images-item">
+                    <img src={imageFormat(path)} onClick={() => viewPhoto(`${baseUrl}${path}`)} />
+                    <i class="iconfont icon-guanbi11 close-icon remove-img-icon" onClick={(e) => removeArrayValue(e, item, index)}></i>
+                  </div>
+                )
+              })
+              : null
           }
           {/* 最多上传9张图片 */}
           {
@@ -98,14 +110,13 @@ export default defineComponent({
               ? <div class="add-box" onClick={() => showUpload(item, 'img')} >
                 <i class="iconfont icon-jia1 add-icon"></i>
                 <div class="upload-box">
-                  {/* @uploadCallback="uploadCallback"  */}
-                  <UploadBox type="image"></UploadBox>
+                  <UploadBox type="image" onUploadCallback={uploadCallback}></UploadBox>
                 </div >
               </div >
               : null
           }
         </div>
-      </div>
+      </div >
     )
   },
 });

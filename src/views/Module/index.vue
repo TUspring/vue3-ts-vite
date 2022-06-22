@@ -13,30 +13,32 @@
         <!-- 1、单行输入框 -->
         <component :is="CurrentCompoent['single_input']" v-if="item.key ==='single_input'" :item="item"
           @changeCallback="storageValueChange"></component>
-
         <!-- 2、多行输入框 -->
         <component :is="CurrentCompoent['multiple_input']" v-if="item.key ==='multiple_input'" :item="item"
           @changeCallback="storageValueChange"></component>
-
         <!-- 3、数字输入框 -->
         <component :is="CurrentCompoent['number_input']" v-if="item.key ==='number_input'" :item="item"
           @changeCallback="storageValueChange"></component>
-
         <!-- 4、单选框 -->
         <component :is="CurrentCompoent['radio_choice']" v-if="item.key ==='radio_choice'" :item="item"
           @changeCallback="storageValueChange" @handleSelectPopup="handlePopup"></component>
-
         <!-- 5、多选框 -->
         <component :is="CurrentCompoent['multiple_choice']" v-if="item.key ==='multiple_choice'" :item="item"
           @changeCallback="storageValueChange" @handleSelectPopup="handlePopup"></component>
-
         <!--  6、日期 -->
         <component :is="CurrentCompoent['date']" v-if="item.key ==='date'" :item="item"
           @changeCallback="storageValueChange" @handleSelectPopup="handlePopup"></component>
-
-        <!--  6、日期区间 -->
+        <!--  7、日期区间 -->
         <component :is="CurrentCompoent['date_rang']" v-if="item.key ==='date_rang'" :item="item"
           @changeCallback="storageValueChange" @handleSelectPopup="showDateSelect"></component>
+        <!--  8、图片 -->
+        <component :is="CurrentCompoent['picture']" v-if="item.key ==='picture'" :item="item"
+          @changeCallback="storageValueChange"></component>
+        <!--  9、说明文字 -->
+        <component :is="CurrentCompoent['explain']" v-if="item.key ==='explain'" :item="item"></component>
+        <!--  10、金额 -->
+        <component :is="CurrentCompoent['money']" v-if="item.key ==='money'" :item="item"
+          @changeCallback="storageValueChange"></component>
       </div>
 
       <!-- 发送到群 -->
@@ -174,7 +176,7 @@
     <!-- 日期 年月日date  年月日时分datetime-->
     <van-popup v-model:show="popup.dateSelectVisible" position="bottom">
       <van-datetime-picker v-model:show="state.datePickerValue"
-        :type="state.curSelectViewData.data?.date_type && state.curSelectViewData.data.date_type == '1' ? 'datetime':'date'"
+        :type="state.curSelectViewData.data.date_type && state.curSelectViewData.data.date_type == '1' ? 'datetime':'date'"
         title="选择日期" :min-date="new Date('1978-01-01')" :max-date="new Date('2050-01-01')"
         @cancel="popup.dateSelectVisible=false" @confirm="handleDateConfirm" />
     </van-popup>
@@ -195,9 +197,12 @@
     'multiple_choice': markRaw(defineAsyncComponent(() => import('./module-unit/multiple-choice'))),
     'date': markRaw(defineAsyncComponent(() => import('./module-unit/date'))),
     'date_rang': markRaw(defineAsyncComponent(() => import('./module-unit/date-rang'))),
+    'picture': markRaw(defineAsyncComponent(() => import('./module-unit/picture'))),
+    'explain': markRaw(defineAsyncComponent(() => import('./module-unit/explain'))),
+    'money': markRaw(defineAsyncComponent(() => import('./module-unit/money'))),
   })
   const { ctx, proxy: { $http, $util } } = getCurrentInstance()
-  let routeInfo = useRouter().currentRoute?.value?.query
+  let routeInfo = useRouter().currentRoute.value.query
   let tableFormTotalList = reactive([])
   let state = reactive({
     detailInfo: {},
@@ -205,7 +210,7 @@
     currentModuleId: null, //组件id
     currentTableRowIndex: 0, //索引
     submitLoading: false,
-    datePickerValue: new Date().format("yyyy-MM-dd"), //日期
+    datePickerValue: $util.dateFormat(new Date(), "yyyy-MM-dd"), //日期
   });
   let popup = reactive({
     radioSelectVisible: false, //单选框
@@ -267,8 +272,10 @@
    * 确定日期选择
    * */
   let handleDateConfirm = (value) => {
-    state.datePickerValue = new Date(value).format("yyyy-MM-dd");
-    let dateStr = state.curSelectViewData.data.date_type == '1' ? new Date(value).format("yyyy-MM-dd hh:mm") : new Date(value).format("yyyy-MM-dd");
+    state.datePickerValue = $util.dateFormat(new Date(value), "yyyy-MM-dd");
+    let dateStr = state.curSelectViewData.data.date_type == '1'
+      ? $util.dateFormat(new Date(value), "yyyy-MM-dd hh:mm")
+      : $util.dateFormat(new Date(value), "yyyy-MM-dd");
     if (state.openDateType === "start_value") {
       if (state.curSelectViewData.data.end_value && dateStr) {
         if (new Date(dateStr).getTime() > new Date(state.curSelectViewData.data.end_value).getTime()) {

@@ -72,7 +72,7 @@
   const router = useRouter();
   const store = useStore()
 
-  let routeInfo = useRouter().currentRoute?.value?.query
+  let routeInfo = useRouter().currentRoute.value.query
   let state = reactive({
     baseUrl: JSON.parse(localStorage.getItem("ENV_HTTP")),
     isListEnd: false,

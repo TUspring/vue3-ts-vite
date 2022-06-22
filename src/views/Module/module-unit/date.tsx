@@ -35,7 +35,7 @@ export default defineComponent({
               ? <span class="required-icon">*</span>
               : null
           }
-          <div>{item.data?.title}</div>
+          <div>{item.data.title}</div>
         </div>
         <div class="item-view__right" onClick={() => showDateSelect(item)}>
           {

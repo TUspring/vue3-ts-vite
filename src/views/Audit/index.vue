@@ -219,7 +219,7 @@
   const { ctx, proxy: { $http, $util } } = getCurrentInstance()
   const router = useRouter();
   const store = useStore()
-  let routeInfo = useRouter().currentRoute?.value?.query
+  let routeInfo = useRouter().currentRoute.value.query
 
   let state = reactive({
     TipsImage,
@@ -237,7 +237,7 @@
     citySelectedResult: null,
     openDateType: "", //选择日期类型
     baseUrl: JSON.parse(localStorage.getItem("ENV_HTTP")),
-    datePickerValue: new Date().format("yyyy-MM-dd"), //日期
+    datePickerValue: $util.dateFormat(new Date(), "yyyy-MM-dd"), //日期
     detailId: '',
     currentUploadType: '', //上传类型
     detailInfo: {},

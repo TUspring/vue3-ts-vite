@@ -1,20 +1,5 @@
-Date.prototype.format = function (fmt: string): string {
-  var o = {
-    "M+": this.getMonth() + 1, //月份
-    "d+": this.getDate(), //日
-    "h+": this.getHours(), //小时
-    "m+": this.getMinutes(), //分
-    "s+": this.getSeconds(), //秒
-    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-    "S": this.getMilliseconds() //毫秒
-  };
-  if (/(y+)/.test(fmt.replace(/-/g, "/")))
-    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-  for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt))
-      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  return fmt;
-};
+
+
 
 var util = {
   /**
@@ -33,20 +18,30 @@ var util = {
     }
     return ("" + num).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, "$1,");
   },
-
   /**
-   * 日期处理
-   * */
-  timeFormat(time: string) {
-    if (new Date().format('yyyy') === new Date(time).format('yyyy')) {
-      return new Date(time).format('MM-dd');
-    } else {
-      return new Date(time).format('yyyy-MM-dd');
-    }
+   * 日期格式化
+   * 参数一：日期
+   * 参数二：格式化
+   * util.dateFormat(date, 'yyyy-MM-dd')
+  */
+  dateFormat(date:any,fmt: string): string {
+    var o = {
+      "M+": date.getMonth() + 1, //月份
+      "d+": date.getDate(), //日
+      "h+": date.getHours(), //小时
+      "m+": date.getMinutes(), //分
+      "s+": date.getSeconds(), //秒
+      "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+      "S": date.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt.replace(/-/g, "/")))
+      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+      if (new RegExp("(" + k + ")").test(fmt))
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
   },
-  dateFormat: (time: string) => {
-    return new Date(time).format('MM月dd日')
-  },
+
 
   /**
    * 对毫分金额处理
@@ -141,29 +136,9 @@ var util = {
     }
   },
 
-
-  //获取数据类型
-  getType(obj: any) {
-    var toString = Object.prototype.toString;
-    var map = {
-      '[object Boolean]': 'boolean',
-      '[object Number]': 'number',
-      '[object String]': 'string',
-      '[object Function]': 'function',
-      '[object Array]': 'array',
-      '[object Date]': 'date',
-      '[object RegExp]': 'regExp',
-      '[object Undefined]': 'undefined',
-      '[object Null]': 'null',
-      '[object Object]': 'object'
-    };
-    if (obj instanceof Element) {
-      return 'element';
-    }
-    return map[toString.call(obj)];
-  },
-
-  // 加密手机号码 
+  /**
+   * 手机号码中间几位显示星号
+   * */
   encryptionNumber(value: string) {
     var encryption = "";
     for (var i = 0; i < value.length; i++) {
@@ -173,9 +148,9 @@ var util = {
         encryption = encryption + value[i];
       }
     }
-
     return encryption;
   },
+
   onlyNumber(code: string) {
     var reg = /^[0-9]*$/;
     if (!code.match(reg)) {
@@ -183,10 +158,12 @@ var util = {
     }
     return code;
   },
+
   //清楚空格
   clearSpace(str: string) {
     return str.replace(/\s+/g, "");
   },
+
   //倒计时
   countDown() {
     let codeDelay = 59;
@@ -197,6 +174,7 @@ var util = {
       }
       return codeDelay;
     }, 1000);
+
   },
   // 检验邮箱
   checkEmail(str: string) {
@@ -220,5 +198,4 @@ var util = {
     return !reFax.test(str) ? false : true;
   },
 }
-
 export default util;

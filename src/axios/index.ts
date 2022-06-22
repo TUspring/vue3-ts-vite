@@ -4,10 +4,12 @@
  */
 
 import instance from './intercept';
-import { AxiosRequest, CustomResponse } from './types';
+import { AxiosRequest, CustomResponse } from './types';;
 import { Toast } from 'vant';
 
-const token = window.localStorage.getItem("userInfo") ? JSON.parse(window.localStorage.getItem("userInfo") || "").token : "",
+const token = window.localStorage.getItem("userInfo")
+  ? JSON.parse(window.localStorage.getItem("userInfo") || "").token
+  : "",
   reqURL = '',
   header: object = {
     'Content-Type': 'application/x-www-form-urlencoded', //Form Data
@@ -22,8 +24,8 @@ class Abstract {
         headers,
         method,
         url,
-        params,
         data,
+        params,
         responseType,
       }).then((res) => {
         if (res.headers.token) {
@@ -32,15 +34,15 @@ class Abstract {
         if (res.status === 200) {  // 200:服务端业务处理正常结束
           if (res.data.status === 'ok') {
             resolve(res.data);
-          } else { 
-            Toast.fail({ message: res.data?.message });
+          } else {
+            Toast.fail({ message: res.data.message });
             resolve(res.data);
           }
         } else {
-          resolve({ status: false, message: res.data?.message, data: null });
+          resolve({ status: false, message: res.data.message, data: null });
         }
       }).catch((err) => {
-        const message = err?.data?.message || err?.message;
+        const message = err.data.message || err.message;
         Toast.fail({ message });
         reject({ status: false, message, data: null });
       });
@@ -75,8 +77,8 @@ class Abstract {
     return this.apiAxios({ method: 'DELETE', url, data, params, responseType })
   }
 }
-export default Abstract;
 
+export default Abstract;
 
 function resetToken(header: any) {
   let userInfo = JSON.parse(window.localStorage.getItem("userInfo") || "");

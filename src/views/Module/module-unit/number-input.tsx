@@ -30,7 +30,7 @@ export default defineComponent({
               ? <span class="required-icon">*</span>
               : null
           }
-          <div>{item.data?.title} {item.data?.unit ? `(${item.data.unit})` : ''}</div>
+          <div>{item.data.title} {item.data.unit ? `(${item.data.unit})` : ''}</div>
         </div>
         <div class="item-input">
           <input class="input-box" type="number" placeholder={item.data.tips} v-model={item.data.value} onBlur={onBlurEvent} />

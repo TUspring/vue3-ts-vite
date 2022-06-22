@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vue3</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,shrink-to-fit=no,user-scalable=no,minimal-ui"
+    name="viewport">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vue3</title>
+  <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+  <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    var vConsole = new window.VConsole();
+    var ENV_HTTP = 'http://dingtalk.test.whitehorse.cn/';
+    if (window.location.href.indexOf("oa.whitehorse.cn") >= 0) {
+      ENV_HTTP = 'http://oa.whitehorse.cn/';
+    }
+    if (ENV_HTTP[ENV_HTTP.length - 1] === '/') {
+      ENV_HTTP = ENV_HTTP.substr(0, ENV_HTTP.length - 1);
+    }
+    localStorage.setItem("ENV_HTTP", JSON.stringify(ENV_HTTP));
+  </script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

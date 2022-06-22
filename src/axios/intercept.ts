@@ -12,11 +12,12 @@ interface PendingType {
   cancel: Function;
 }
 
+// axios 实例
+const instance = axios.create(baseConfig as object);
+
 // 取消重复请求
 const pending: Array<PendingType> = [];
 const CancelToken = axios.CancelToken;
-// axios 实例
-const instance = axios.create(baseConfig);
 
 // 移除重复请求
 const removePending = (config: AxiosRequestConfig) => {
@@ -60,7 +61,7 @@ instance.interceptors.response.use(
   response => {
     Toast.clear();
     removePending(response.config);
-    const errorCode = response?.data?.error_code;
+    const errorCode = response.data.error_code;
     // 根据errorCode，对业务做异常处理(和后端约定)
     switch (errorCode) {
       case '401':
@@ -77,7 +78,7 @@ instance.interceptors.response.use(
     Toast.clear();
     const response = error.response;
     // 根据返回的http状态码做不同的处理
-    switch (response?.status) {
+    switch (response.status) {
       case 400:
         //  页面找不到
         break;
@@ -124,4 +125,5 @@ instance.interceptors.response.use(
     return Promise.reject(response || { message: error.message });
   }
 );
+
 export default instance;

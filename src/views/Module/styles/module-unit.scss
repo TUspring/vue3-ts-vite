@@ -177,7 +177,7 @@
     flex-shrink: 0;
 
     .icon {
-      color: rgba(255, 161, 20, .5);
+      color: rgba(255, 161, 20, 0.5);
       font-size: 38px;
     }
   }
@@ -334,7 +334,6 @@
       display: inline-block;
     }
 
-
     .status {
       opacity: 0.8;
       display: inline-block;
@@ -344,11 +343,11 @@
     }
 
     .pass-status {
-      color: #67C23A;
+      color: #67c23a;
     }
 
     .refuse-status {
-      color: #F56C6C;
+      color: #f56c6c;
     }
 
     .subitem-right {

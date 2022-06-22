@@ -7,6 +7,10 @@ class Basic extends Abstract {
   userLogin(data: object) {
     return this.postRequest({ url: '/api/user/phone_login', data })
   }
+  // 自动登录
+  autoLogin(data: object) {
+    return this.postRequest({ url: '/api/user/login', data })
+  }
   //模板列表
   approvalModuleList(data: object) {
     return this.postRequest({ url: '/api/user/approval/list', data })
@@ -38,6 +42,10 @@ class Basic extends Abstract {
   //审批页详情数据
   handleDetail(params = {}) {
     return this.getRequest({ url: '/api/user/approval/audit_detail', params })
+  }
+  //上传图片
+  uploadFile(data: object) {
+    return this.postRequest({ url: '/api/upload', data })
   }
 }
 export default new Basic()

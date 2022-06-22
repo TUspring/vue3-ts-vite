@@ -8,7 +8,7 @@ export default {
   withCredentials: true,
   responseType: "json",
   maxContentLength: 4000,
-  validateStatus: (status: any) => status >= 200 && status < 300,
+  validateStatus: (status: number) => status >= 200 && status < 300,
   maxRedirects: 5,
   transformRequest: [
     function (data: any) {
