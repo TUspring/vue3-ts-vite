@@ -6,6 +6,7 @@
  * */
 import "../styles/module.scss";
 import { defineComponent, getCurrentInstance } from 'vue';
+
 export default defineComponent({
   props: {
     item: {
@@ -17,20 +18,10 @@ export default defineComponent({
   },
   // formatNumber
   setup(props: any, { emit }) {
+    const { proxy: { $util } } = getCurrentInstance()
     let { item } = props;
-    console.log(props)
-    //调起单选选择窗口
-    let showSelectPopup = (item: any) => {
-      emit('handleSelectPopup', item, 'radio')
-    }
-    //移除选项
-    let removeValue = (event: any, item: any) => {
-      item.data.value = '';
-      event.stopPropagation();//阻止冒泡
-    }
-    let storageValueChange = (event: any, item: any) => {
-      item.data.value = '';
-      event.stopPropagation();//阻止冒泡
+    let storageValueChange = (item: any) => {
+      emit('changeCallback', item)
     }
     return () => (
       <div class="component-view input-item-view" >
@@ -41,28 +32,45 @@ export default defineComponent({
                 ? <span class="required-icon">*</span>
                 : null
             }
+            <div>{item.data.title}</div>
           </div>
           <div class="item-input">
-            {/* <input class="input-box number-input" type="number" placeholder="{item.data.tips}" v-model="item.data.value"
-              onChange={(e) => storageValueChange(item)} /> */}
+            <input class="input-box number-input" type="number" placeholder={item.data.tips} v-model={item.data.value}
+              onChange={() => storageValueChange(item)} />
           </div>
         </div>
-        {/* v-if="item.data.strtoupper" */}
-        <div class="desc-box df-bt" >
-          <div class="item-label">大写</div>
-          <div class="txt">
-            {/* 根据数字转大写  */}
-            {/* v-if="item.data.value" */}
-            {/* <p>
-              <span>{item.data.value | numberToString}</span>
-              <span v-if="item.data.thousands"> ({item.data.value | formatNumber})</span>
-            </p> */}
-            <p  >壹万元整（示例）</p>
-          </div>
-        </div>
-        {/* <div class="df-right" v-if="item.data.thousands && !item.data.strtoupper">
-          <div style="color: #999;font-size: 12px;" v-if="item.data.value">({ item.data.value | formatNumber })</div>
-        </div> */}
+        {
+          item.data.strtoupper ?
+            <div class="desc-box df-bt" >
+              <div class="item-label">大写</div>
+              <div class="txt">
+                {/* 根据数字转大写  */}
+                {
+                  item.data.value ?
+                    <p>
+                      <span>{$util.numberToString(item.data.value)}</span>
+                      {item.data.thousands ? <span> ({$util.formatNumber(item.data.value)})</span> : null}
+                    </p>
+                    : null
+                }
+                <p>壹万元整（示例）</p>
+              </div>
+            </div>
+            : null
+        }
+        {
+          item.data.thousands && !item.data.strtoupper ?
+            <div class="df-right" >
+              {
+                item.data.value
+                  ? <div style="color: #999;font-size: 12px;">
+                    ({$util.formatNumber(item.data.value)})
+                  </div>
+                  : null
+              }
+            </div>
+            : null
+        }
       </div>
     )
   },
