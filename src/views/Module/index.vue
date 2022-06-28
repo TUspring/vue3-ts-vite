@@ -39,6 +39,18 @@
         <!--  10、金额 -->
         <component :is="CurrentCompoent['money']" v-if="item.key ==='money'" :item="item"
           @changeCallback="storageValueChange"></component>
+        <!--  11、附件 -->
+        <component :is="CurrentCompoent['attachment']" v-if="item.key ==='attachment'" :item="item"
+          @changeCallback="storageValueChange"></component>
+        <!--  12、身份证 -->
+        <component :is="CurrentCompoent['id_card']" v-if="item.key ==='id_card'" :item="item"
+          @changeCallback="storageValueChange"></component>
+        <!--  13、电话 -->
+        <component :is="CurrentCompoent['phone']" v-if="item.key ==='phone'" :item="item"
+          @changeCallback="storageValueChange"></component>
+        <!--  14、手写签名 -->
+        <component :is="CurrentCompoent['sign']" v-if="item.key ==='sign'" :item="item"
+          @changeCallback="storageValueChange"></component>
       </div>
 
       <!-- 发送到群 -->
@@ -180,6 +192,12 @@
         title="选择日期" :min-date="new Date('1978-01-01')" :max-date="new Date('2050-01-01')"
         @cancel="popup.dateSelectVisible=false" @confirm="handleDateConfirm" />
     </van-popup>
+
+    <!-- 签名-->
+    <van-popup v-model:show="popup.signPopupVisible" position="bottom">
+      <ESign v-if="signPopupVisible" @esignCallback="signResult" @close="signPopupVisible =false"></ESign>
+    </van-popup>
+
   </div>
 </template>
 
@@ -189,6 +207,7 @@
   import { useRouter } from 'vue-router'
   import SelectRadio from "@/components/module-dialog/radio.vue";
   import SelectCheck from "@/components/module-dialog/checklist.vue";
+  import ESign from "@/components/module-dialog/esign.vue";
   const CurrentCompoent = reactive({
     'single_input': markRaw(defineAsyncComponent(() => import('./module-unit/single-input'))),
     'multiple_input': markRaw(defineAsyncComponent(() => import('./module-unit/multiple-input'))),
@@ -200,6 +219,10 @@
     'picture': markRaw(defineAsyncComponent(() => import('./module-unit/picture'))),
     'explain': markRaw(defineAsyncComponent(() => import('./module-unit/explain'))),
     'money': markRaw(defineAsyncComponent(() => import('./module-unit/money'))),
+    'attachment': markRaw(defineAsyncComponent(() => import('./module-unit/attachment'))),
+    'id_card': markRaw(defineAsyncComponent(() => import('./module-unit/id-card'))),
+    'phone': markRaw(defineAsyncComponent(() => import('./module-unit/phone'))),
+    'sign': markRaw(defineAsyncComponent(() => import('./module-unit/sign'))),
   })
   const { ctx, proxy: { $http, $util } } = getCurrentInstance()
   let routeInfo = useRouter().currentRoute.value.query
@@ -216,6 +239,7 @@
     radioSelectVisible: false, //单选框
     multipleSelectVisible: false, //多选框
     dateSelectVisible: false, //日期
+    signPopupVisible: false,//签名窗口
   });
 
   onMounted(async () => {
@@ -241,9 +265,13 @@
     state.openDateType = type;
     popup.dateSelectVisible = true;
   }
+  const showSignPopup = (item) => {
+    state.curSelectViewData = item;
+    state.signPopupVisible = true;
+  }
   /**
- * 处理名字显示
-*/
+   * 处理名字显示
+  */
   const substringName = (name) => {
     return $util.substringName(name)
   }
@@ -363,6 +391,13 @@
     }).catch(error => {
       console.log(error);
     });
+  }
+
+  //签名完成结果
+  const signResult = (res) => {
+    state.signPopupVisible = false;
+    state.curSelectViewData.data.value = res
+    storageValueChange(state.curSelectViewData)
   }
 </script>
 
